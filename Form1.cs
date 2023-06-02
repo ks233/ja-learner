@@ -48,9 +48,15 @@ namespace ja_learner
         public Form1()
         {
             InitializeComponent();
+            InitializeWebView();
             // DisableCors();
         }
-
+        private async void InitializeWebView()
+        {
+            await webView.EnsureCoreWebView2Async(null);
+            webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
+            webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             // 初始化 HTTP 服务器
@@ -58,11 +64,17 @@ namespace ja_learner
             // webView.Source = new Uri("http://localhost:8080"); // build
             webView.Source = new Uri("http://localhost:5173"); // dev
 
-
-
             // 初始化 mecab dotnet
             parameter = new MeCabParam();
             tagger = MeCabTagger.Create(parameter);
+        }
+
+        private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
+        {
+            e.Handled = true; // 防止WebView2打开新窗口
+
+            // 使用默认浏览器打开链接
+            Process.Start(new ProcessStartInfo(e.Uri) { UseShellExecute = true });
         }
 
         private string RunMecab(string sentence)
