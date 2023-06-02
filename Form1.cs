@@ -2,6 +2,12 @@ using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using MeCab;
+using OpenAI.Managers;
+using OpenAI.ObjectModels.RequestModels;
+using OpenAI.ObjectModels;
+using Microsoft.Extensions.DependencyInjection;
+using OpenAI.Interfaces;
+using OpenAI;
 
 namespace ja_learner
 {
@@ -45,6 +51,8 @@ namespace ja_learner
         private MeCabParam parameter;
         private MeCabTagger tagger;
 
+        private string sentence = "";
+
         public Form1()
         {
             InitializeComponent();
@@ -67,6 +75,9 @@ namespace ja_learner
             // 初始化 mecab dotnet
             parameter = new MeCabParam();
             tagger = MeCabTagger.Create(parameter);
+
+            // 读取 api key
+            textBoxApiKey.Text = File.ReadAllText("apikey.txt");
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -77,7 +88,7 @@ namespace ja_learner
             Process.Start(new ProcessStartInfo(e.Uri) { UseShellExecute = true });
         }
 
-        private string RunMecab(string sentence)
+        private string RunMecab()
         {
             string result = "[";
             foreach (var node in tagger.ParseToNodes(sentence))
@@ -178,9 +189,34 @@ namespace ja_learner
 
         private void btnInputText_Click(object sender, EventArgs e)
         {
-            string sentence = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Title", "文の敬体(ですます調)、常体(である調)を解析するJavaScriptライブラリ", 0, 0);
-            string json = RunMecab(sentence);
+            sentence = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Title", "文の敬体(ですます調)、常体(である調)を解析するJavaScriptライブラリ", 0, 0);
+            string json = RunMecab();
             UpdateMecabResult(json);
+        }
+
+        private async void btnCallGPT_Click(object sender, EventArgs e)
+        {
+            var openAiService = new OpenAIService(new OpenAiOptions()
+            {
+                ApiKey = textBoxApiKey.Text
+            });
+
+            var completionResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
+            {
+                Messages = new List<ChatMessage>
+                {
+                    ChatMessage.FromSystem("你是一名日语老师。我将提供一些日语句子，你的工作是将它们翻译成中文，并对难以理解的部分做出清晰的解释。"),
+                    ChatMessage.FromUser(sentence),
+                },
+                Model = Models.ChatGpt3_5Turbo,
+                MaxTokens = 150//optional
+            });
+            MessageBox.Show(sentence);
+            MessageBox.Show(completionResult.Error.Message);
+            if (completionResult.Successful)
+            {
+                textBoxChat.Text=completionResult.Choices.First().Message.Content;
+            }
         }
     }
 }
