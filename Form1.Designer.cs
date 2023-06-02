@@ -32,7 +32,7 @@
             timerWindowAlign = new System.Windows.Forms.Timer(components);
             tabControl = new TabControl();
             tabPageText = new TabPage();
-            webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             panel1 = new Panel();
             btnInputText = new Button();
             checkBoxClipboardMode = new CheckBox();
@@ -43,7 +43,7 @@
             textBox1 = new TextBox();
             tabControl.SuspendLayout();
             tabPageText.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
             panel1.SuspendLayout();
             tabPageSettings.SuspendLayout();
             SuspendLayout();
@@ -62,42 +62,41 @@
             tabControl.Location = new System.Drawing.Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(503, 256);
+            tabControl.Size = new Size(585, 442);
             tabControl.TabIndex = 2;
             // 
             // tabPageText
             // 
-            tabPageText.Controls.Add(webView21);
+            tabPageText.Controls.Add(webView);
             tabPageText.Controls.Add(panel1);
             tabPageText.Location = new System.Drawing.Point(4, 26);
             tabPageText.Name = "tabPageText";
             tabPageText.Padding = new Padding(3);
-            tabPageText.Size = new Size(495, 226);
+            tabPageText.Size = new Size(577, 412);
             tabPageText.TabIndex = 1;
             tabPageText.Text = "内容分析";
             tabPageText.UseVisualStyleBackColor = true;
             // 
-            // webView21
+            // webView
             // 
-            webView21.AllowExternalDrop = true;
-            webView21.CreationProperties = null;
-            webView21.DefaultBackgroundColor = Color.White;
-            webView21.Dock = DockStyle.Fill;
-            webView21.Location = new System.Drawing.Point(3, 3);
-            webView21.Name = "webView21";
-            webView21.Size = new Size(489, 188);
-            webView21.Source = new Uri("https://t.bilibili.com/", UriKind.Absolute);
-            webView21.TabIndex = 1;
-            webView21.ZoomFactor = 1D;
+            webView.AllowExternalDrop = true;
+            webView.CreationProperties = null;
+            webView.DefaultBackgroundColor = Color.White;
+            webView.Dock = DockStyle.Fill;
+            webView.Location = new System.Drawing.Point(3, 3);
+            webView.Name = "webView";
+            webView.Size = new Size(571, 374);
+            webView.TabIndex = 1;
+            webView.ZoomFactor = 1D;
             // 
             // panel1
             // 
             panel1.Controls.Add(btnInputText);
             panel1.Controls.Add(checkBoxClipboardMode);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new System.Drawing.Point(3, 191);
+            panel1.Location = new System.Drawing.Point(3, 377);
             panel1.Name = "panel1";
-            panel1.Size = new Size(489, 32);
+            panel1.Size = new Size(571, 32);
             panel1.TabIndex = 0;
             // 
             // btnInputText
@@ -108,6 +107,7 @@
             btnInputText.TabIndex = 1;
             btnInputText.Text = "输入要分析的句子";
             btnInputText.UseVisualStyleBackColor = true;
+            btnInputText.Click += btnInputText_Click;
             // 
             // checkBoxClipboardMode
             // 
@@ -124,7 +124,7 @@
             // 
             tabPageChatGPT.Location = new System.Drawing.Point(4, 26);
             tabPageChatGPT.Name = "tabPageChatGPT";
-            tabPageChatGPT.Size = new Size(531, 252);
+            tabPageChatGPT.Size = new Size(577, 412);
             tabPageChatGPT.TabIndex = 2;
             tabPageChatGPT.Text = "GPT帮帮我";
             tabPageChatGPT.UseVisualStyleBackColor = true;
@@ -137,7 +137,7 @@
             tabPageSettings.Location = new System.Drawing.Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(531, 252);
+            tabPageSettings.Size = new Size(577, 412);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
@@ -175,14 +175,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(503, 256);
+            ClientSize = new Size(585, 442);
             Controls.Add(tabControl);
             Name = "Form1";
             Text = "KS的日语学习工具";
             Load += Form1_Load;
             tabControl.ResumeLayout(false);
             tabPageText.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
+            ((System.ComponentModel.ISupportInitialize)webView).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             tabPageSettings.ResumeLayout(false);
@@ -200,7 +200,7 @@
         private CheckBox checkBoxAlignWindow;
         private Button btnSelectWindow;
         private Panel panel1;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView;
         private Button btnInputText;
         private CheckBox checkBoxClipboardMode;
     }

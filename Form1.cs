@@ -1,5 +1,7 @@
+using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using MeCab;
 
 namespace ja_learner
 {
@@ -38,19 +40,60 @@ namespace ja_learner
         }
 
 
+        IDisposable _server = null;
+
+        private MeCabParam parameter;
+        private MeCabTagger tagger;
 
         public Form1()
         {
             InitializeComponent();
+            // DisableCors();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // 初始化 HTTP 服务器
+            HttpServer.StartServer();
+            // webView.Source = new Uri("http://localhost:8080"); // build
+            webView.Source = new Uri("http://localhost:5173"); // dev
+
+
+
+            // 初始化 mecab dotnet
+            parameter = new MeCabParam();
+            tagger = MeCabTagger.Create(parameter);
+        }
+
+        private string RunMecab(string sentence)
+        {
+            string result = "[";
+            foreach (var node in tagger.ParseToNodes(sentence))
+            {
+                if (node.CharType > 0)
+                {
+                    var features = node.Feature.Split(',');
+                    var displayFeatures = string.Join(", ", features);
+                    // features[0] 是词性，[6] 是原型，[7] 是发音（如果有的话）
+                    string pos = features[0];
+                    string basic = features[6];
+                    string reading = features.Length > 7 ? features[7] : "";
+                    result += $"{{surface:'{node.Surface}',pos:'{pos}',basic:'{basic}',reading:'{reading}'}},";
+                }
+            }
+            result += "]";
+            return result;
+        }
+
+        private async void UpdateMecabResult(string json)
+        {
+            string result = await webView.ExecuteScriptAsync($"updateData({json})");
 
         }
 
-        private void Form1_SizeChanged(object sender, EventArgs e) {
-            if(timerWindowAlign.Enabled)
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            if (timerWindowAlign.Enabled)
             {
                 heightAfter = this.Height;
             }
@@ -119,6 +162,13 @@ namespace ja_learner
                 this.Location = locationBefore;
             }
 
+        }
+
+        private void btnInputText_Click(object sender, EventArgs e)
+        {
+            string sentence = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Title", "文の敬体(ですます調)、常体(である調)を解析するJavaScriptライブラリ", 0, 0);
+            string json = RunMecab(sentence);
+            UpdateMecabResult(json);
         }
     }
 }

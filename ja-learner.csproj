@@ -7,9 +7,11 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MeCab.DotNet" Version="0.0.40" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1774.30" />
   </ItemGroup>
 
