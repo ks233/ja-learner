@@ -30,30 +30,25 @@
         {
             components = new System.ComponentModel.Container();
             timerWindowAlign = new System.Windows.Forms.Timer(components);
-            tabControl = new TabControl();
+            timerSelectWindow = new System.Windows.Forms.Timer(components);
+            tabPageSettings = new TabPage();
+            textBoxHwnd = new TextBox();
+            btnSelectWindow = new Button();
+            checkBoxAlignWindow = new CheckBox();
             tabPageText = new TabPage();
             webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             panel1 = new Panel();
+            checkBoxShowDictForm = new CheckBox();
+            checkBoxDark = new CheckBox();
             btnInputText = new Button();
             checkBoxClipboardMode = new CheckBox();
-            tabPageChatGPT = new TabPage();
-            textBoxChat = new TextBox();
-            panel2 = new Panel();
-            btnCallGPT = new Button();
-            textBoxPrompt = new TextBox();
-            tabPageSettings = new TabPage();
-            labelApiKey = new Label();
-            textBoxApiKey = new TextBox();
-            btnSelectWindow = new Button();
-            checkBoxAlignWindow = new CheckBox();
-            textBox1 = new TextBox();
-            tabControl.SuspendLayout();
+            tabControl = new TabControl();
+            timerGetClipboard = new System.Windows.Forms.Timer(components);
+            tabPageSettings.SuspendLayout();
             tabPageText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
             panel1.SuspendLayout();
-            tabPageChatGPT.SuspendLayout();
-            panel2.SuspendLayout();
-            tabPageSettings.SuspendLayout();
+            tabControl.SuspendLayout();
             SuspendLayout();
             // 
             // timerWindowAlign
@@ -61,153 +56,32 @@
             timerWindowAlign.Interval = 20;
             timerWindowAlign.Tick += timerWindowAlign_Tick;
             // 
-            // tabControl
+            // timerSelectWindow
             // 
-            tabControl.Controls.Add(tabPageText);
-            tabControl.Controls.Add(tabPageChatGPT);
-            tabControl.Controls.Add(tabPageSettings);
-            tabControl.Dock = DockStyle.Fill;
-            tabControl.Location = new System.Drawing.Point(0, 0);
-            tabControl.Name = "tabControl";
-            tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(572, 407);
-            tabControl.TabIndex = 2;
-            // 
-            // tabPageText
-            // 
-            tabPageText.Controls.Add(webView);
-            tabPageText.Controls.Add(panel1);
-            tabPageText.Location = new System.Drawing.Point(4, 26);
-            tabPageText.Name = "tabPageText";
-            tabPageText.Padding = new Padding(3);
-            tabPageText.Size = new Size(564, 377);
-            tabPageText.TabIndex = 1;
-            tabPageText.Text = "内容分析";
-            tabPageText.UseVisualStyleBackColor = true;
-            // 
-            // webView
-            // 
-            webView.AllowExternalDrop = true;
-            webView.CreationProperties = null;
-            webView.DefaultBackgroundColor = Color.White;
-            webView.Dock = DockStyle.Fill;
-            webView.Location = new System.Drawing.Point(3, 3);
-            webView.Name = "webView";
-            webView.Size = new Size(558, 339);
-            webView.TabIndex = 1;
-            webView.ZoomFactor = 1D;
-            // 
-            // panel1
-            // 
-            panel1.Controls.Add(btnInputText);
-            panel1.Controls.Add(checkBoxClipboardMode);
-            panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new System.Drawing.Point(3, 342);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(558, 32);
-            panel1.TabIndex = 0;
-            // 
-            // btnInputText
-            // 
-            btnInputText.Location = new System.Drawing.Point(98, 4);
-            btnInputText.Name = "btnInputText";
-            btnInputText.Size = new Size(115, 23);
-            btnInputText.TabIndex = 1;
-            btnInputText.Text = "输入要分析的句子";
-            btnInputText.UseVisualStyleBackColor = true;
-            btnInputText.Click += btnInputText_Click;
-            // 
-            // checkBoxClipboardMode
-            // 
-            checkBoxClipboardMode.AutoSize = true;
-            checkBoxClipboardMode.Location = new System.Drawing.Point(3, 6);
-            checkBoxClipboardMode.Name = "checkBoxClipboardMode";
-            checkBoxClipboardMode.Size = new Size(87, 21);
-            checkBoxClipboardMode.TabIndex = 0;
-            checkBoxClipboardMode.Text = "剪贴板模式";
-            checkBoxClipboardMode.UseVisualStyleBackColor = true;
-            checkBoxClipboardMode.CheckedChanged += checkBoxClipboardMode_CheckedChanged;
-            // 
-            // tabPageChatGPT
-            // 
-            tabPageChatGPT.Controls.Add(textBoxChat);
-            tabPageChatGPT.Controls.Add(panel2);
-            tabPageChatGPT.Location = new System.Drawing.Point(4, 26);
-            tabPageChatGPT.Name = "tabPageChatGPT";
-            tabPageChatGPT.Size = new Size(564, 377);
-            tabPageChatGPT.TabIndex = 2;
-            tabPageChatGPT.Text = "GPT帮帮我";
-            tabPageChatGPT.UseVisualStyleBackColor = true;
-            // 
-            // textBoxChat
-            // 
-            textBoxChat.Dock = DockStyle.Fill;
-            textBoxChat.Location = new System.Drawing.Point(0, 0);
-            textBoxChat.Multiline = true;
-            textBoxChat.Name = "textBoxChat";
-            textBoxChat.Size = new Size(564, 302);
-            textBoxChat.TabIndex = 2;
-            // 
-            // panel2
-            // 
-            panel2.Controls.Add(btnCallGPT);
-            panel2.Controls.Add(textBoxPrompt);
-            panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new System.Drawing.Point(0, 302);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(564, 75);
-            panel2.TabIndex = 1;
-            // 
-            // btnCallGPT
-            // 
-            btnCallGPT.Dock = DockStyle.Right;
-            btnCallGPT.Location = new System.Drawing.Point(448, 0);
-            btnCallGPT.Name = "btnCallGPT";
-            btnCallGPT.Size = new Size(116, 75);
-            btnCallGPT.TabIndex = 1;
-            btnCallGPT.Text = "提问";
-            btnCallGPT.UseVisualStyleBackColor = true;
-            btnCallGPT.Click += btnCallGPT_Click;
-            // 
-            // textBoxPrompt
-            // 
-            textBoxPrompt.Dock = DockStyle.Fill;
-            textBoxPrompt.Location = new System.Drawing.Point(0, 0);
-            textBoxPrompt.Multiline = true;
-            textBoxPrompt.Name = "textBoxPrompt";
-            textBoxPrompt.Size = new Size(564, 75);
-            textBoxPrompt.TabIndex = 0;
+            timerSelectWindow.Tick += timerSelectWindow_Tick;
             // 
             // tabPageSettings
             // 
-            tabPageSettings.Controls.Add(labelApiKey);
-            tabPageSettings.Controls.Add(textBoxApiKey);
+            tabPageSettings.Controls.Add(textBoxHwnd);
             tabPageSettings.Controls.Add(btnSelectWindow);
             tabPageSettings.Controls.Add(checkBoxAlignWindow);
-            tabPageSettings.Controls.Add(textBox1);
             tabPageSettings.Location = new System.Drawing.Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(564, 377);
+            tabPageSettings.Size = new Size(553, 310);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
             // 
-            // labelApiKey
+            // textBoxHwnd
             // 
-            labelApiKey.AutoSize = true;
-            labelApiKey.Location = new System.Drawing.Point(8, 51);
-            labelApiKey.Name = "labelApiKey";
-            labelApiKey.Size = new Size(100, 17);
-            labelApiKey.TabIndex = 6;
-            labelApiKey.Text = "OpenAI API Key";
-            // 
-            // textBoxApiKey
-            // 
-            textBoxApiKey.Location = new System.Drawing.Point(114, 48);
-            textBoxApiKey.Name = "textBoxApiKey";
-            textBoxApiKey.Size = new Size(180, 23);
-            textBoxApiKey.TabIndex = 5;
+            textBoxHwnd.Location = new System.Drawing.Point(89, 15);
+            textBoxHwnd.Name = "textBoxHwnd";
+            textBoxHwnd.ReadOnly = true;
+            textBoxHwnd.Size = new Size(100, 23);
+            textBoxHwnd.TabIndex = 1;
+            textBoxHwnd.Text = "114514";
+            textBoxHwnd.TextChanged += textBoxHwnd_TextChanged;
             // 
             // btnSelectWindow
             // 
@@ -230,55 +104,134 @@
             checkBoxAlignWindow.UseVisualStyleBackColor = true;
             checkBoxAlignWindow.CheckedChanged += checkBoxAlignWindow_CheckedChanged;
             // 
-            // textBox1
+            // tabPageText
             // 
-            textBox1.Location = new System.Drawing.Point(89, 15);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
-            textBox1.TabIndex = 1;
-            textBox1.Text = "16672";
+            tabPageText.Controls.Add(webView);
+            tabPageText.Controls.Add(panel1);
+            tabPageText.Location = new System.Drawing.Point(4, 26);
+            tabPageText.Name = "tabPageText";
+            tabPageText.Padding = new Padding(3);
+            tabPageText.Size = new Size(553, 310);
+            tabPageText.TabIndex = 1;
+            tabPageText.Text = "内容分析";
+            tabPageText.UseVisualStyleBackColor = true;
+            // 
+            // webView
+            // 
+            webView.AllowExternalDrop = true;
+            webView.CreationProperties = null;
+            webView.DefaultBackgroundColor = Color.White;
+            webView.Dock = DockStyle.Fill;
+            webView.Location = new System.Drawing.Point(3, 3);
+            webView.Name = "webView";
+            webView.Size = new Size(547, 272);
+            webView.TabIndex = 1;
+            webView.ZoomFactor = 1D;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(checkBoxShowDictForm);
+            panel1.Controls.Add(checkBoxDark);
+            panel1.Controls.Add(btnInputText);
+            panel1.Controls.Add(checkBoxClipboardMode);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new System.Drawing.Point(3, 275);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(547, 32);
+            panel1.TabIndex = 0;
+            // 
+            // checkBoxShowDictForm
+            // 
+            checkBoxShowDictForm.AutoSize = true;
+            checkBoxShowDictForm.Location = new System.Drawing.Point(331, 6);
+            checkBoxShowDictForm.Name = "checkBoxShowDictForm";
+            checkBoxShowDictForm.Size = new Size(75, 21);
+            checkBoxShowDictForm.TabIndex = 7;
+            checkBoxShowDictForm.Text = "词典窗口";
+            checkBoxShowDictForm.UseVisualStyleBackColor = true;
+            checkBoxShowDictForm.CheckedChanged += checkBoxShowDictForm_CheckedChanged;
+            // 
+            // checkBoxDark
+            // 
+            checkBoxDark.AutoSize = true;
+            checkBoxDark.Location = new System.Drawing.Point(250, 6);
+            checkBoxDark.Name = "checkBoxDark";
+            checkBoxDark.Size = new Size(75, 21);
+            checkBoxDark.TabIndex = 6;
+            checkBoxDark.Text = "深色模式";
+            checkBoxDark.UseVisualStyleBackColor = true;
+            checkBoxDark.CheckedChanged += checkBoxDark_CheckedChanged;
+            // 
+            // btnInputText
+            // 
+            btnInputText.Location = new System.Drawing.Point(96, 4);
+            btnInputText.Name = "btnInputText";
+            btnInputText.Size = new Size(115, 23);
+            btnInputText.TabIndex = 1;
+            btnInputText.Text = "输入要分析的句子";
+            btnInputText.UseVisualStyleBackColor = true;
+            btnInputText.Click += btnInputText_Click;
+            // 
+            // checkBoxClipboardMode
+            // 
+            checkBoxClipboardMode.AutoSize = true;
+            checkBoxClipboardMode.Location = new System.Drawing.Point(3, 6);
+            checkBoxClipboardMode.Name = "checkBoxClipboardMode";
+            checkBoxClipboardMode.Size = new Size(87, 21);
+            checkBoxClipboardMode.TabIndex = 0;
+            checkBoxClipboardMode.Text = "剪贴板模式";
+            checkBoxClipboardMode.UseVisualStyleBackColor = true;
+            checkBoxClipboardMode.CheckedChanged += checkBoxClipboardMode_CheckedChanged;
+            // 
+            // tabControl
+            // 
+            tabControl.Controls.Add(tabPageText);
+            tabControl.Controls.Add(tabPageSettings);
+            tabControl.Dock = DockStyle.Fill;
+            tabControl.Location = new System.Drawing.Point(0, 0);
+            tabControl.Name = "tabControl";
+            tabControl.SelectedIndex = 0;
+            tabControl.Size = new Size(561, 340);
+            tabControl.TabIndex = 2;
+            // 
+            // timerGetClipboard
+            // 
+            timerGetClipboard.Tick += timerGetClipboard_Tick;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(572, 407);
+            ClientSize = new Size(561, 340);
             Controls.Add(tabControl);
             Name = "Form1";
             Text = "KS的日语学习工具";
             Load += Form1_Load;
-            tabControl.ResumeLayout(false);
+            tabPageSettings.ResumeLayout(false);
+            tabPageSettings.PerformLayout();
             tabPageText.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            tabPageChatGPT.ResumeLayout(false);
-            tabPageChatGPT.PerformLayout();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
-            tabPageSettings.ResumeLayout(false);
-            tabPageSettings.PerformLayout();
+            tabControl.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
         private System.Windows.Forms.Timer timerWindowAlign;
-        private TabControl tabControl;
-        private TabPage tabPageText;
-        private TabPage tabPageChatGPT;
+        private System.Windows.Forms.Timer timerSelectWindow;
         private TabPage tabPageSettings;
-        private TextBox textBox1;
-        private CheckBox checkBoxAlignWindow;
-        private Button btnSelectWindow;
-        private Panel panel1;
+        private TabPage tabPageText;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView;
+        private Panel panel1;
         private Button btnInputText;
         private CheckBox checkBoxClipboardMode;
-        private TextBox textBoxChat;
-        private Panel panel2;
-        private Button btnCallGPT;
-        private TextBox textBoxPrompt;
-        private Label labelApiKey;
-        private TextBox textBoxApiKey;
+        private TabControl tabControl;
+        private System.Windows.Forms.Timer timerGetClipboard;
+        private TextBox textBoxHwnd;
+        private Button btnSelectWindow;
+        private CheckBox checkBoxAlignWindow;
+        private CheckBox checkBoxDark;
+        private CheckBox checkBoxShowDictForm;
     }
 }

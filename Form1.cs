@@ -2,12 +2,8 @@ using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using MeCab;
-using OpenAI.Managers;
-using OpenAI.ObjectModels.RequestModels;
-using OpenAI.ObjectModels;
-using Microsoft.Extensions.DependencyInjection;
-using OpenAI.Interfaces;
-using OpenAI;
+using System.Text;
+using System.Reflection.Metadata;
 
 namespace ja_learner
 {
@@ -20,12 +16,19 @@ namespace ja_learner
 
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(out Point lpPoint);
-
+        // 根据鼠标位置获取目标窗口句柄hwnd
         [DllImport("user32.dll")]
         private static extern IntPtr WindowFromPoint(Point point);
 
-        [DllImport("user32.dll")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+        // 根据hwnd获取窗口标题
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder title, int size);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern int GetWindowTextLength(IntPtr hWnd); 
+        
+        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+        static extern IntPtr GetParent(IntPtr hWnd);
 
         // 定义 RECT 结构体
         [StructLayout(LayoutKind.Sequential)]
@@ -51,22 +54,27 @@ namespace ja_learner
         private MeCabParam parameter;
         private MeCabTagger tagger;
 
-        private string sentence = "";
+        DictForm dictForm;
+
+
+        private string sentence = "文の敬体(ですます調)、常体(である調)を解析するJavaScriptライブラリ";
 
         public Form1()
         {
             InitializeComponent();
-            InitializeWebView();
             // DisableCors();
         }
-        private async void InitializeWebView()
+        private async Task InitializeWebView()
         {
             await webView.EnsureCoreWebView2Async(null);
             webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
+            webView.CoreWebView2.Profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Light;
             webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
         }
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
+            // 初始化 webview
+            await InitializeWebView();
             // 初始化 HTTP 服务器
             HttpServer.StartServer();
             // webView.Source = new Uri("http://localhost:8080"); // build
@@ -76,8 +84,8 @@ namespace ja_learner
             parameter = new MeCabParam();
             tagger = MeCabTagger.Create(parameter);
 
-            // 读取 api key
-            textBoxApiKey.Text = File.ReadAllText("apikey.txt");
+            UpdateMecabResult(RunMecab());
+            dictForm = new DictForm(this);
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -122,10 +130,6 @@ namespace ja_learner
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private System.Drawing.Point locationBefore; // 记录普通模式下窗口的位置
         private Size sizeBefore; // 记录普通模式下窗口的大小
@@ -133,39 +137,62 @@ namespace ja_learner
 
         private void timerWindowAlign_Tick(object sender, EventArgs e)
         {
-            int processId = int.Parse(textBox1.Text);
+            IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
             try
             {
-                // 获取进程对象
-                Process process = Process.GetProcessById(processId);
-
-                // 获取主窗口句柄
-                IntPtr mainWindowHandle = process.MainWindowHandle;
-
                 // 调用 GetWindowRect 函数获取窗口位置和大小
                 Rectangle rect;
-                if (GetWindowRect(mainWindowHandle, out rect))
+                if (GetWindowRect(hwnd, out rect))
                 {
                     this.Top = rect.Bottom;
                     this.Left = rect.Left;
                     this.Width = rect.Right - rect.Left; // 对齐宽度
                 }
             }
-            finally
+            catch (Exception ex)
             {
-
+                WindowAlign = false;
             }
-
         }
 
-        private void btnSelectWindow_Click(object sender, EventArgs e)
+        public bool WindowAlign
         {
-
+            get
+            {
+                return checkBoxAlignWindow.Checked;
+            }
+            set
+            {
+                checkBoxAlignWindow.Checked = value;
+                timerWindowAlign.Enabled = value;
+            }
         }
 
         private void checkBoxClipboardMode_CheckedChanged(object sender, EventArgs e)
         {
-            btnInputText.Enabled = !checkBoxClipboardMode.Checked;
+            ClipBoardMode = checkBoxClipboardMode.Checked;
+        }
+        private void timerGetClipboard_Tick(object sender, EventArgs e)
+        {
+            string newSentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim();
+            if (newSentence != sentence)
+            {
+                sentence = newSentence;
+                UpdateMecabResult(RunMecab());
+            }
+        }
+        public bool ClipBoardMode
+        {
+            get
+            {
+                return checkBoxClipboardMode.Checked;
+            }
+            set
+            {
+                checkBoxClipboardMode.Checked = value;
+                timerGetClipboard.Enabled = value;
+                btnInputText.Enabled = !value;
+            }
         }
 
         private void checkBoxAlignWindow_CheckedChanged(object sender, EventArgs e)
@@ -189,33 +216,77 @@ namespace ja_learner
 
         private void btnInputText_Click(object sender, EventArgs e)
         {
-            sentence = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Title", "文の敬体(ですます調)、常体(である調)を解析するJavaScriptライブラリ", 0, 0);
+            sentence = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Title", "", 0, 0);
             string json = RunMecab();
             UpdateMecabResult(json);
         }
 
-        private async void btnCallGPT_Click(object sender, EventArgs e)
+        private void timerSelectWindow_Tick(object sender, EventArgs e)
         {
-            var openAiService = new OpenAIService(new OpenAiOptions()
+            Point cursorPos = new Point();
+            cursorPos.X = Cursor.Position.X;
+            cursorPos.Y = Cursor.Position.Y;
+            // 当前鼠标位置所在窗口的最高父窗口的hwnd
+            IntPtr hwnd = WindowFromPoint(cursorPos);
+            IntPtr parentHwnd;
+            while(true)
             {
-                ApiKey = textBoxApiKey.Text
-            });
+                parentHwnd = GetParent(hwnd);
+                if (parentHwnd == IntPtr.Zero) break;
+                hwnd = parentHwnd;
+            }
+            textBoxHwnd.Text = hwnd.ToString();
 
-            var completionResult = await openAiService.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
+            // 判断鼠标是否按下
+            bool mouseDown = (Control.MouseButtons & MouseButtons.Left) == MouseButtons.Left;
+
+            if (mouseDown)
             {
-                Messages = new List<ChatMessage>
-                {
-                    ChatMessage.FromSystem("你是一名日语老师。我将提供一些日语句子，你的工作是将它们翻译成中文，并对难以理解的部分做出清晰的解释。"),
-                    ChatMessage.FromUser(sentence),
-                },
-                Model = Models.ChatGpt3_5Turbo,
-                MaxTokens = 150//optional
-            });
-            MessageBox.Show(sentence);
-            MessageBox.Show(completionResult.Error.Message);
-            if (completionResult.Successful)
+                timerSelectWindow.Enabled = false;
+            }
+        }
+
+        private void btnSelectWindow_Click(object sender, EventArgs e)
+        {
+            WindowAlign = false;
+            timerSelectWindow.Enabled = true;
+        }
+
+        private void checkBoxDark_CheckedChanged(object sender, EventArgs e)
+        {
+            webView.CoreWebView2.Profile.PreferredColorScheme = checkBoxDark.Checked ? CoreWebView2PreferredColorScheme.Dark : CoreWebView2PreferredColorScheme.Light;
+        }
+
+        private void checkBoxShowDictForm_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxShowDictForm.Checked)
             {
-                textBoxChat.Text=completionResult.Choices.First().Message.Content;
+                dictForm.Show();
+            }
+            else
+            {
+                dictForm.Hide();
+            }
+        }
+
+        public static String GetWindowTitle(IntPtr handle)
+        {
+            int length = GetWindowTextLength(handle);
+            StringBuilder text = new StringBuilder(length + 1);
+            GetWindowText(handle, text, text.Capacity);
+            return text.ToString();
+        }
+        private void textBoxHwnd_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
+                string windowTitle = GetWindowTitle(hwnd); 
+                checkBoxAlignWindow.Text = "与【" + windowTitle + "】对齐";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }
