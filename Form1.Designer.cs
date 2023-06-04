@@ -38,7 +38,7 @@
             tabPageText = new TabPage();
             webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             panel1 = new Panel();
-            checkBoxShowDictForm = new CheckBox();
+            buttonShowDictForm = new Button();
             checkBoxDark = new CheckBox();
             btnInputText = new Button();
             checkBoxClipboardMode = new CheckBox();
@@ -53,7 +53,7 @@
             // 
             // timerWindowAlign
             // 
-            timerWindowAlign.Interval = 20;
+            timerWindowAlign.Interval = 15;
             timerWindowAlign.Tick += timerWindowAlign_Tick;
             // 
             // timerSelectWindow
@@ -68,7 +68,7 @@
             tabPageSettings.Location = new System.Drawing.Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(553, 310);
+            tabPageSettings.Size = new Size(667, 392);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
@@ -111,7 +111,7 @@
             tabPageText.Location = new System.Drawing.Point(4, 26);
             tabPageText.Name = "tabPageText";
             tabPageText.Padding = new Padding(3);
-            tabPageText.Size = new Size(553, 310);
+            tabPageText.Size = new Size(667, 392);
             tabPageText.TabIndex = 1;
             tabPageText.Text = "内容分析";
             tabPageText.UseVisualStyleBackColor = true;
@@ -124,37 +124,37 @@
             webView.Dock = DockStyle.Fill;
             webView.Location = new System.Drawing.Point(3, 3);
             webView.Name = "webView";
-            webView.Size = new Size(547, 272);
+            webView.Size = new Size(661, 354);
             webView.TabIndex = 1;
             webView.ZoomFactor = 1D;
             // 
             // panel1
             // 
-            panel1.Controls.Add(checkBoxShowDictForm);
+            panel1.Controls.Add(buttonShowDictForm);
             panel1.Controls.Add(checkBoxDark);
             panel1.Controls.Add(btnInputText);
             panel1.Controls.Add(checkBoxClipboardMode);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new System.Drawing.Point(3, 275);
+            panel1.Location = new System.Drawing.Point(3, 357);
             panel1.Name = "panel1";
-            panel1.Size = new Size(547, 32);
+            panel1.Size = new Size(661, 32);
             panel1.TabIndex = 0;
             // 
-            // checkBoxShowDictForm
+            // buttonShowDictForm
             // 
-            checkBoxShowDictForm.AutoSize = true;
-            checkBoxShowDictForm.Location = new System.Drawing.Point(331, 6);
-            checkBoxShowDictForm.Name = "checkBoxShowDictForm";
-            checkBoxShowDictForm.Size = new Size(75, 21);
-            checkBoxShowDictForm.TabIndex = 7;
-            checkBoxShowDictForm.Text = "词典窗口";
-            checkBoxShowDictForm.UseVisualStyleBackColor = true;
-            checkBoxShowDictForm.CheckedChanged += checkBoxShowDictForm_CheckedChanged;
+            buttonShowDictForm.Location = new System.Drawing.Point(195, 4);
+            buttonShowDictForm.Name = "buttonShowDictForm";
+            buttonShowDictForm.Size = new Size(93, 23);
+            buttonShowDictForm.TabIndex = 7;
+            buttonShowDictForm.Text = "打开词典窗口";
+            buttonShowDictForm.UseVisualStyleBackColor = true;
+            buttonShowDictForm.Click += buttonShowDictForm_Click;
             // 
             // checkBoxDark
             // 
+            checkBoxDark.Anchor = AnchorStyles.Right;
             checkBoxDark.AutoSize = true;
-            checkBoxDark.Location = new System.Drawing.Point(250, 6);
+            checkBoxDark.Location = new System.Drawing.Point(581, 6);
             checkBoxDark.Name = "checkBoxDark";
             checkBoxDark.Size = new Size(75, 21);
             checkBoxDark.TabIndex = 6;
@@ -166,9 +166,9 @@
             // 
             btnInputText.Location = new System.Drawing.Point(96, 4);
             btnInputText.Name = "btnInputText";
-            btnInputText.Size = new Size(115, 23);
+            btnInputText.Size = new Size(93, 23);
             btnInputText.TabIndex = 1;
-            btnInputText.Text = "输入要分析的句子";
+            btnInputText.Text = "手动输入句子";
             btnInputText.UseVisualStyleBackColor = true;
             btnInputText.Click += btnInputText_Click;
             // 
@@ -179,7 +179,7 @@
             checkBoxClipboardMode.Name = "checkBoxClipboardMode";
             checkBoxClipboardMode.Size = new Size(87, 21);
             checkBoxClipboardMode.TabIndex = 0;
-            checkBoxClipboardMode.Text = "剪贴板模式";
+            checkBoxClipboardMode.Text = "读取剪贴板";
             checkBoxClipboardMode.UseVisualStyleBackColor = true;
             checkBoxClipboardMode.CheckedChanged += checkBoxClipboardMode_CheckedChanged;
             // 
@@ -191,7 +191,7 @@
             tabControl.Location = new System.Drawing.Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(561, 340);
+            tabControl.Size = new Size(675, 422);
             tabControl.TabIndex = 2;
             // 
             // timerGetClipboard
@@ -202,7 +202,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(561, 340);
+            ClientSize = new Size(675, 422);
             Controls.Add(tabControl);
             Name = "Form1";
             Text = "KS的日语学习工具";
@@ -232,6 +232,6 @@
         private Button btnSelectWindow;
         private CheckBox checkBoxAlignWindow;
         private CheckBox checkBoxDark;
-        private CheckBox checkBoxShowDictForm;
+        private Button buttonShowDictForm;
     }
 }

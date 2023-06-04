@@ -50,8 +50,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(576, 453);
             Controls.Add(webView);
+            MaximizeBox = false;
             Name = "DictForm";
-            Text = "DictForm";
+            Text = "词典";
+            FormClosing += DictForm_FormClosing;
+            Load += DictForm_Load;
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();
             ResumeLayout(false);
         }

@@ -25,8 +25,8 @@ namespace ja_learner
         static extern int GetWindowText(IntPtr hWnd, StringBuilder title, int size);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern int GetWindowTextLength(IntPtr hWnd); 
-        
+        static extern int GetWindowTextLength(IntPtr hWnd);
+
         [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         static extern IntPtr GetParent(IntPtr hWnd);
 
@@ -69,7 +69,10 @@ namespace ja_learner
             await webView.EnsureCoreWebView2Async(null);
             webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
             webView.CoreWebView2.Profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Light;
+            // 处理打开新窗口（用默认浏览器打开）
             webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+            // 接收js消息（查词典）
+            webView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
         }
         private async void Form1_Load(object sender, EventArgs e)
         {
@@ -86,6 +89,8 @@ namespace ja_learner
 
             UpdateMecabResult(RunMecab());
             dictForm = new DictForm(this);
+            dictForm.Show();
+            dictForm.Hide();
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -94,6 +99,11 @@ namespace ja_learner
 
             // 使用默认浏览器打开链接
             Process.Start(new ProcessStartInfo(e.Uri) { UseShellExecute = true });
+        }
+        private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+        {
+            string message = e.TryGetWebMessageAsString();
+            dictForm.SearchText(message);
         }
 
         private string RunMecab()
@@ -147,6 +157,10 @@ namespace ja_learner
                     this.Top = rect.Bottom;
                     this.Left = rect.Left;
                     this.Width = rect.Right - rect.Left; // 对齐宽度
+
+                    dictForm.Top = rect.Top;
+                    dictForm.Left=rect.Right;
+                    dictForm.Height=this.Bottom - rect.Top;
                 }
             }
             catch (Exception ex)
@@ -229,7 +243,7 @@ namespace ja_learner
             // 当前鼠标位置所在窗口的最高父窗口的hwnd
             IntPtr hwnd = WindowFromPoint(cursorPos);
             IntPtr parentHwnd;
-            while(true)
+            while (true)
             {
                 parentHwnd = GetParent(hwnd);
                 if (parentHwnd == IntPtr.Zero) break;
@@ -257,16 +271,12 @@ namespace ja_learner
             webView.CoreWebView2.Profile.PreferredColorScheme = checkBoxDark.Checked ? CoreWebView2PreferredColorScheme.Dark : CoreWebView2PreferredColorScheme.Light;
         }
 
-        private void checkBoxShowDictForm_CheckedChanged(object sender, EventArgs e)
+        private void buttonShowDictForm_Click(object sender, EventArgs e)
         {
-            if (checkBoxShowDictForm.Checked)
-            {
-                dictForm.Show();
-            }
-            else
-            {
-                dictForm.Hide();
-            }
+            dictForm.Show();
+            dictForm.WindowState = FormWindowState.Normal; // 从最小化状态到普通状态
+            dictForm.BringToFront();
+            dictForm.Activate();
         }
 
         public static String GetWindowTitle(IntPtr handle)
@@ -281,7 +291,7 @@ namespace ja_learner
             try
             {
                 IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
-                string windowTitle = GetWindowTitle(hwnd); 
+                string windowTitle = GetWindowTitle(hwnd);
                 checkBoxAlignWindow.Text = "与【" + windowTitle + "】对齐";
             }
             catch (Exception ex)
@@ -289,5 +299,6 @@ namespace ja_learner
                 MessageBox.Show(ex.Message);
             }
         }
+
     }
 }
