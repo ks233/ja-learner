@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,15 @@ namespace ja_learner
             await webView.EnsureCoreWebView2Async(null);
             webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
             webView.CoreWebView2.Profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Light;
-            webView.Source = new Uri("http://localhost:5173/dict"); // dev
+            // 处理打开新窗口（用默认浏览器打开）
+            webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+        }
+        private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
+        {
+            e.Handled = true; // 防止WebView2打开新窗口
+
+            // 使用默认浏览器打开链接
+            Process.Start(new ProcessStartInfo(e.Uri) { UseShellExecute = true });
         }
 
         public async void SearchText(string text)
@@ -50,6 +59,11 @@ namespace ja_learner
         private async void DictForm_Load(object sender, EventArgs e)
         {
             await InitializeWebView();
+#if DEBUG
+            webView.Source = new Uri("http://localhost:5173/dict"); // dev
+#else
+            webView.Source = new Uri("http://localhost:8080/dict"); // build
+#endif
         }
     }
 }

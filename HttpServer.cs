@@ -9,7 +9,7 @@ namespace ja_learner
 {
     internal class HttpServer
     {
-        private static string _rootFolder = @"E:\Github\ja-learner-webview\dist";
+        private static string _rootFolder = Directory.GetCurrentDirectory() + @"\dist";
         private static HttpListener _httpListener;
         public static void StartServer()
         {
@@ -35,7 +35,7 @@ namespace ja_learner
             });
         }
 
-        private static void HandleRequest(HttpListenerContext context)
+        private static async void HandleRequest(HttpListenerContext context)
         {
             var request = context.Request;
             var response = context.Response;
@@ -44,7 +44,33 @@ namespace ja_learner
             var localPath = request.Url.LocalPath.TrimStart('/');
             var filePath = string.IsNullOrEmpty(localPath) ? Path.Combine(_rootFolder, "index.html") : Path.Combine(_rootFolder, localPath);
 
-            if (File.Exists(filePath))
+            string url = request.Url.LocalPath;
+
+            // 代理 mojiapi
+            if (url.StartsWith("/mojiapi"))
+            {
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    string apiUrl = url.Replace("/mojiapi", "https://api.mojidict.com");
+                    string json = ""; 
+                    using (StreamReader reader = new StreamReader(request.InputStream))
+                    {
+                        json = reader.ReadToEnd();
+                    }
+                    httpClient.DefaultRequestHeaders.Clear();
+                    HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpResponseMessage r = await httpClient.PostAsync(apiUrl, content);
+
+                    // 将代理请求的响应返回给客户端
+                    response.StatusCode = (int)r.StatusCode;
+                    response.ContentType = r.Content.Headers.ContentType?.ToString();
+                    byte[] buffer = await r.Content.ReadAsByteArrayAsync();
+                    response.ContentLength64 = buffer.Length;
+                    response.OutputStream.Write(buffer, 0, buffer.Length);
+                }
+                response.Close();
+            }
+            else if (File.Exists(filePath))
             {
                 try
                 {
@@ -142,5 +168,5 @@ namespace ja_learner
             return mimeType;
         }
     }
-       
+
 }

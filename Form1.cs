@@ -78,13 +78,24 @@ namespace ja_learner
         {
             // 初始化 webview
             await InitializeWebView();
+
+#if DEBUG
+            webView.Source = new Uri("http://localhost:5173/"); // dev
+#else
             // 初始化 HTTP 服务器
             HttpServer.StartServer();
-            // webView.Source = new Uri("http://localhost:8080"); // build
-            webView.Source = new Uri("http://localhost:5173"); // dev
+            webView.Source = new Uri("http://localhost:8080/"); // build
+#endif
 
             // 初始化 mecab dotnet
             parameter = new MeCabParam();
+            // 读取用户词典
+            string[] userdic = Directory.GetFiles("dic/userdic");
+            for (int i = 0; i < userdic.Length; i++)
+            {
+                userdic[i] = "userdic/" + Path.GetFileName(userdic[i]);
+            }
+            parameter.UserDic = userdic;
             tagger = MeCabTagger.Create(parameter);
 
             UpdateMecabResult(RunMecab());
@@ -145,6 +156,25 @@ namespace ja_learner
         private Size sizeBefore; // 记录普通模式下窗口的大小
         private int heightAfter = 200; // 附着模式时，窗体通常会比较矮
 
+        private void checkBoxAlignWindow_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAlignWindow.Checked)
+            {
+                // 记录普通状态的窗口位置，切换到吸附状态下的窗口位置
+                sizeBefore = this.Size;
+                locationBefore = this.Location;
+                this.Height = heightAfter;
+                timerWindowAlign.Enabled = true;
+            }
+            else
+            {
+                timerWindowAlign.Enabled = false;
+                heightAfter = this.Height;
+                this.Size = sizeBefore;
+                this.Location = locationBefore;
+            }
+        }
+
         private void timerWindowAlign_Tick(object sender, EventArgs e)
         {
             IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
@@ -159,8 +189,8 @@ namespace ja_learner
                     this.Width = rect.Right - rect.Left; // 对齐宽度
 
                     dictForm.Top = rect.Top;
-                    dictForm.Left=rect.Right;
-                    dictForm.Height=this.Bottom - rect.Top;
+                    dictForm.Left = rect.Right;
+                    dictForm.Height = this.Bottom - rect.Top;
                 }
             }
             catch (Exception ex)
@@ -169,16 +199,19 @@ namespace ja_learner
             }
         }
 
+        private bool windowAlign = false;
+
         public bool WindowAlign
         {
             get
             {
-                return checkBoxAlignWindow.Checked;
+                return windowAlign;
             }
             set
             {
-                checkBoxAlignWindow.Checked = value;
-                timerWindowAlign.Enabled = value;
+                windowAlign = value;
+                checkBoxAlignWindow.Checked = windowAlign;
+                timerWindowAlign.Enabled = windowAlign;
             }
         }
 
@@ -207,25 +240,6 @@ namespace ja_learner
                 timerGetClipboard.Enabled = value;
                 btnInputText.Enabled = !value;
             }
-        }
-
-        private void checkBoxAlignWindow_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBoxAlignWindow.Checked)
-            {
-                sizeBefore = this.Size;
-                locationBefore = this.Location;
-                this.Height = heightAfter;
-                timerWindowAlign.Enabled = true;
-            }
-            else
-            {
-                timerWindowAlign.Enabled = false;
-                heightAfter = this.Height;
-                this.Size = sizeBefore;
-                this.Location = locationBefore;
-            }
-
         }
 
         private void btnInputText_Click(object sender, EventArgs e)
@@ -293,6 +307,13 @@ namespace ja_learner
                 IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
                 string windowTitle = GetWindowTitle(hwnd);
                 checkBoxAlignWindow.Text = "与【" + windowTitle + "】对齐";
+                // 判断窗口句柄是不是自己的
+                if (hwnd == this.Handle || hwnd == dictForm.Handle)
+                {
+                    checkBoxAlignWindow.Enabled = false;
+                    return;
+                }
+                checkBoxAlignWindow.Enabled = true;
             }
             catch (Exception ex)
             {

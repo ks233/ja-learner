@@ -96,11 +96,12 @@
             // checkBoxAlignWindow
             // 
             checkBoxAlignWindow.AutoSize = true;
+            checkBoxAlignWindow.Enabled = false;
             checkBoxAlignWindow.Location = new System.Drawing.Point(195, 17);
             checkBoxAlignWindow.Name = "checkBoxAlignWindow";
-            checkBoxAlignWindow.Size = new Size(99, 21);
+            checkBoxAlignWindow.Size = new Size(87, 21);
             checkBoxAlignWindow.TabIndex = 3;
-            checkBoxAlignWindow.Text = "与该程序对齐";
+            checkBoxAlignWindow.Text = "与窗口对齐";
             checkBoxAlignWindow.UseVisualStyleBackColor = true;
             checkBoxAlignWindow.CheckedChanged += checkBoxAlignWindow_CheckedChanged;
             // 
@@ -196,6 +197,7 @@
             // 
             // timerGetClipboard
             // 
+            timerGetClipboard.Interval = 15;
             timerGetClipboard.Tick += timerGetClipboard_Tick;
             // 
             // Form1
