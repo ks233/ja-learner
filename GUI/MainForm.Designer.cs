@@ -40,12 +40,13 @@
             tabControl = new TabControl();
             timerGetClipboard = new System.Windows.Forms.Timer(components);
             panel1 = new Panel();
+            checkBoxAutoTranslate = new CheckBox();
             buttonTranslate = new Button();
             buttonShowDictForm = new Button();
             checkBoxDark = new CheckBox();
             btnInputText = new Button();
             checkBoxClipboardMode = new CheckBox();
-            checkBoxAutoTranslate = new CheckBox();
+            checkBoxTopmost = new CheckBox();
             tabPageSettings.SuspendLayout();
             tabPageText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
@@ -64,13 +65,14 @@
             // 
             // tabPageSettings
             // 
+            tabPageSettings.Controls.Add(checkBoxTopmost);
             tabPageSettings.Controls.Add(textBoxHwnd);
             tabPageSettings.Controls.Add(btnSelectWindow);
             tabPageSettings.Controls.Add(checkBoxAlignWindow);
             tabPageSettings.Location = new Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(574, 310);
+            tabPageSettings.Size = new Size(510, 348);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
@@ -113,7 +115,7 @@
             tabPageText.Location = new Point(4, 26);
             tabPageText.Name = "tabPageText";
             tabPageText.Padding = new Padding(3);
-            tabPageText.Size = new Size(574, 310);
+            tabPageText.Size = new Size(510, 348);
             tabPageText.TabIndex = 1;
             tabPageText.Text = "分词断句";
             tabPageText.UseVisualStyleBackColor = true;
@@ -126,7 +128,7 @@
             webView.Dock = DockStyle.Fill;
             webView.Location = new Point(3, 3);
             webView.Name = "webView";
-            webView.Size = new Size(568, 304);
+            webView.Size = new Size(504, 342);
             webView.TabIndex = 1;
             webView.ZoomFactor = 1D;
             // 
@@ -138,7 +140,7 @@
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(582, 340);
+            tabControl.Size = new Size(518, 378);
             tabControl.TabIndex = 2;
             // 
             // timerGetClipboard
@@ -155,10 +157,21 @@
             panel1.Controls.Add(btnInputText);
             panel1.Controls.Add(checkBoxClipboardMode);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 340);
+            panel1.Location = new Point(0, 378);
             panel1.Name = "panel1";
-            panel1.Size = new Size(582, 32);
+            panel1.Size = new Size(518, 32);
             panel1.TabIndex = 3;
+            // 
+            // checkBoxAutoTranslate
+            // 
+            checkBoxAutoTranslate.Anchor = AnchorStyles.Right;
+            checkBoxAutoTranslate.AutoSize = true;
+            checkBoxAutoTranslate.Location = new Point(350, 6);
+            checkBoxAutoTranslate.Name = "checkBoxAutoTranslate";
+            checkBoxAutoTranslate.Size = new Size(75, 21);
+            checkBoxAutoTranslate.TabIndex = 9;
+            checkBoxAutoTranslate.Text = "自动翻译";
+            checkBoxAutoTranslate.UseVisualStyleBackColor = true;
             // 
             // buttonTranslate
             // 
@@ -184,7 +197,7 @@
             // 
             checkBoxDark.Anchor = AnchorStyles.Right;
             checkBoxDark.AutoSize = true;
-            checkBoxDark.Location = new Point(495, 6);
+            checkBoxDark.Location = new Point(431, 6);
             checkBoxDark.Name = "checkBoxDark";
             checkBoxDark.Size = new Size(75, 21);
             checkBoxDark.TabIndex = 6;
@@ -213,22 +226,22 @@
             checkBoxClipboardMode.UseVisualStyleBackColor = true;
             checkBoxClipboardMode.CheckedChanged += checkBoxClipboardMode_CheckedChanged;
             // 
-            // checkBoxAutoTranslate
+            // checkBoxTopmost
             // 
-            checkBoxAutoTranslate.Anchor = AnchorStyles.Right;
-            checkBoxAutoTranslate.AutoSize = true;
-            checkBoxAutoTranslate.Location = new Point(414, 6);
-            checkBoxAutoTranslate.Name = "checkBoxAutoTranslate";
-            checkBoxAutoTranslate.Size = new Size(75, 21);
-            checkBoxAutoTranslate.TabIndex = 9;
-            checkBoxAutoTranslate.Text = "自动翻译";
-            checkBoxAutoTranslate.UseVisualStyleBackColor = true;
+            checkBoxTopmost.AutoSize = true;
+            checkBoxTopmost.Location = new Point(8, 44);
+            checkBoxTopmost.Name = "checkBoxTopmost";
+            checkBoxTopmost.Size = new Size(99, 21);
+            checkBoxTopmost.TabIndex = 5;
+            checkBoxTopmost.Text = "保持窗口前置";
+            checkBoxTopmost.UseVisualStyleBackColor = true;
+            checkBoxTopmost.CheckedChanged += checkBoxTopmost_CheckedChanged;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(582, 372);
+            ClientSize = new Size(518, 410);
             Controls.Add(panel1);
             Controls.Add(tabControl);
             Name = "MainForm";
@@ -263,5 +276,6 @@
         private GUI.TranslationPanel translationPanel;
         private Button buttonTranslate;
         private CheckBox checkBoxAutoTranslate;
+        private CheckBox checkBoxTopmost;
     }
 }

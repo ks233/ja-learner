@@ -18,6 +18,7 @@ namespace ja_learner
         public string Reading;// 渲染
         public readonly string ToJson()
         {
+
             return $"{{surface:'{Surface}',pos:'{Pos}',basic:'{Basic}',reading:'{Reading}'}}";
         }
     }
@@ -44,19 +45,20 @@ namespace ja_learner
         public List<TextAnalyzerResult> Analyze(string text)
         {
             List<TextAnalyzerResult> results = new List<TextAnalyzerResult>();
+            results.Clear();
             foreach (var node in tagger.ParseToNodes(text))
             {
-                TextAnalyzerResult result = new TextAnalyzerResult();
                 if (node.CharType > 0)
                 {
+                    TextAnalyzerResult result = new TextAnalyzerResult();
                     var features = node.Feature.Split(',');
                     // features[0] 是词性，[6] 是原型，[7] 是发音（如果有的话）
                     result.Surface = node.Surface;
                     result.Pos = features[0];
                     result.Basic = features[6];
                     result.Reading = features.Length > 7 ? features[7] : "";
+                    results.Add(result);
                 }
-                results.Add(result);
             }
             return results;
         }

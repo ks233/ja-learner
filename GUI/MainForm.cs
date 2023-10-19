@@ -10,7 +10,6 @@ namespace ja_learner
 {
     public partial class MainForm : Form
     {
-        IDisposable _server = null;
         DictForm dictForm;
 
         TextAnalyzer textAnalyzer = new TextAnalyzer();
@@ -19,7 +18,8 @@ namespace ja_learner
         public string Sentence
         {
             get { return sentence; }
-            set {
+            set
+            {
                 sentence = value;
                 dictForm.UpdateTranslationPanelText(sentence);
                 UpdateMecabResult(RunMecab());
@@ -57,7 +57,7 @@ namespace ja_learner
             HttpServer.StartServer();
             webView.Source = new Uri("http://localhost:8080/"); // build
 #endif
-            
+
             dictForm = new DictForm(this);
             dictForm.Show();
             dictForm.Hide();
@@ -161,13 +161,12 @@ namespace ja_learner
         {
             ClipBoardMode = checkBoxClipboardMode.Checked;
         }
-        async private void timerGetClipboard_Tick(object sender, EventArgs e)
+        private void timerGetClipboard_Tick(object sender, EventArgs e)
         {
-            string newSentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim().Replace("¡¡","");
-            if (newSentence != Sentence)
+            string newSentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim().Replace("¡¡", "");
+            if (newSentence != "" && newSentence != Sentence)
             {
                 Sentence = newSentence;
-                MessageBox.Show(newSentence);
             }
         }
         public bool ClipBoardMode
@@ -253,7 +252,7 @@ namespace ja_learner
             {
                 await foreach (var res in chat.StreamResponseEnumerableFromChatbotAsync())
                 {
-                    AppendTranslationText(res.Replace("\n", "<br>"));
+                    AppendTranslationText(res);
                 }
             }
             catch (Exception ex)
@@ -264,10 +263,12 @@ namespace ja_learner
 
         async private void buttonTranslate_Click(object sender, EventArgs e)
         {
-
-            buttonTranslate.Enabled = false;
             await TranslateSentence();
-            buttonTranslate.Enabled = true;
+        }
+
+        private void checkBoxTopmost_CheckedChanged(object sender, EventArgs e)
+        {
+            TopMost = checkBoxTopmost.Checked;
         }
     }
 }

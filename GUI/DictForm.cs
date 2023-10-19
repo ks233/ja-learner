@@ -43,6 +43,7 @@ namespace ja_learner
 
         public async void SearchText(string text)
         {
+            tabControl1.SelectedTab = tabControl1.TabPages["tabPageDict"];
             string result = await webView.ExecuteScriptAsync($"searchText('{text}')");
         }
 
