@@ -21,16 +21,16 @@ namespace ja_learner
         public Conversation CreateTranslateConversation(string text)
         {
             var chat = api.Chat.CreateConversation();
-            chat.AppendSystemMessage("You are a translation engine, you can only translate text and cannot interpret it, and do not explain.");
-            chat.AppendUserInput($"Translate the text to Simplified Chinese, please do not explain any sentences, just translate or leave them as they are.: {text}");
+            chat.AppendSystemMessage("You are a translation engine, translate the text to Simplified Chinese. Don't output anything other than translation results.");
+            chat.AppendUserInput($"{text}");
             return chat;
         }
 
         public Conversation CreateInterpretConversation(string text)
         {
             var chat = api.Chat.CreateConversation();
-            chat.AppendSystemMessage("I want you to act as a Japanese teacher, you can only explain the vocabulary and grammar of the given text in Simplified Chinese. Don't output anything else.");
-            chat.AppendUserInput($"请用中文解释以下句子的单词与语法组成：\n{text}");
+            chat.AppendSystemMessage("You are a Japanese teacher, list and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
+            chat.AppendUserInput($"{text}");
             return chat;
         }
     }
