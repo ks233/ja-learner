@@ -65,5 +65,10 @@ namespace ja_learner
             webView.Source = new Uri("http://localhost:8080/dict"); // build
 #endif
         }
+
+        public void UpdateTranslationPanelText(string text)
+        {
+            translationPanel.UpdateText(text);
+        }
     }
 }

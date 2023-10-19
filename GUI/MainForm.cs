@@ -4,62 +4,33 @@ using System.Runtime.InteropServices;
 using MeCab;
 using System.Text;
 using System.Reflection.Metadata;
+using OpenAI_API.Chat;
 
 namespace ja_learner
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-
-        // 导入 Windows API 函数
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowRect(IntPtr hWnd, out Rectangle rect);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(out Point lpPoint);
-        // 根据鼠标位置获取目标窗口句柄hwnd
-        [DllImport("user32.dll")]
-        private static extern IntPtr WindowFromPoint(Point point);
-
-        // 根据hwnd获取窗口标题
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder title, int size);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern int GetWindowTextLength(IntPtr hWnd);
-
-        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-        static extern IntPtr GetParent(IntPtr hWnd);
-
-        // 定义 RECT 结构体
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Rectangle
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
-
-        // 定义 POINT 结构体
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Point
-        {
-            public int X;
-            public int Y;
-        }
-
-
         IDisposable _server = null;
-
-        private MeCabParam parameter;
-        private MeCabTagger tagger;
-
         DictForm dictForm;
 
+        TextAnalyzer textAnalyzer = new TextAnalyzer();
+        private string sentence = "";
 
-        private string sentence = "文の敬体(ですます調)、常体(である調)を解析するJavaScriptライブラリ";
+        public string Sentence
+        {
+            get { return sentence; }
+            set {
+                sentence = value;
+                dictForm.UpdateTranslationPanelText(sentence);
+                UpdateMecabResult(RunMecab());
+                if (checkBoxAutoTranslate.Checked)
+                {
+                    TranslateSentence();
+                }
+            }
+        }
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             // DisableCors();
@@ -78,7 +49,7 @@ namespace ja_learner
         {
             // 初始化 webview
             await InitializeWebView();
-
+            UserConfig.ReadConfigFile();
 #if DEBUG
             webView.Source = new Uri("http://localhost:5173/"); // dev
 #else
@@ -86,19 +57,7 @@ namespace ja_learner
             HttpServer.StartServer();
             webView.Source = new Uri("http://localhost:8080/"); // build
 #endif
-
-            // 初始化 mecab dotnet
-            parameter = new MeCabParam();
-            // 读取用户词典
-            string[] userdic = Directory.GetFiles("dic/userdic");
-            for (int i = 0; i < userdic.Length; i++)
-            {
-                userdic[i] = "userdic/" + Path.GetFileName(userdic[i]);
-            }
-            parameter.UserDic = userdic;
-            tagger = MeCabTagger.Create(parameter);
-
-            UpdateMecabResult(RunMecab());
+            
             dictForm = new DictForm(this);
             dictForm.Show();
             dictForm.Hide();
@@ -119,28 +78,22 @@ namespace ja_learner
 
         private string RunMecab()
         {
-            string result = "[";
-            foreach (var node in tagger.ParseToNodes(sentence))
-            {
-                if (node.CharType > 0)
-                {
-                    var features = node.Feature.Split(',');
-                    var displayFeatures = string.Join(", ", features);
-                    // features[0] 是词性，[6] 是原型，[7] 是发音（如果有的话）
-                    string pos = features[0];
-                    string basic = features[6];
-                    string reading = features.Length > 7 ? features[7] : "";
-                    result += $"{{surface:'{node.Surface}',pos:'{pos}',basic:'{basic}',reading:'{reading}'}},";
-                }
-            }
-            result += "]";
-            return result;
+            return textAnalyzer.AnalyzeResultToJson(textAnalyzer.Analyze(sentence));
         }
 
         private async void UpdateMecabResult(string json)
         {
             string result = await webView.ExecuteScriptAsync($"updateData({json})");
 
+        }
+
+        private async void AppendTranslationText(string text)
+        {
+            await webView.ExecuteScriptAsync($"appendTranslationText('{text}')");
+        }
+        private async void ClearTranslationText()
+        {
+            await webView.ExecuteScriptAsync($"clearTranslationText()");
         }
 
         private void Form1_SizeChanged(object sender, EventArgs e)
@@ -180,18 +133,7 @@ namespace ja_learner
             IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
             try
             {
-                // 调用 GetWindowRect 函数获取窗口位置和大小
-                Rectangle rect;
-                if (GetWindowRect(hwnd, out rect))
-                {
-                    this.Top = rect.Bottom;
-                    this.Left = rect.Left;
-                    this.Width = rect.Right - rect.Left; // 对齐宽度
-
-                    dictForm.Top = rect.Top;
-                    dictForm.Left = rect.Right;
-                    dictForm.Height = this.Bottom - rect.Top;
-                }
+                WindowAttacher.AttachWindows(this, dictForm, hwnd);
             }
             catch (Exception ex)
             {
@@ -219,13 +161,13 @@ namespace ja_learner
         {
             ClipBoardMode = checkBoxClipboardMode.Checked;
         }
-        private void timerGetClipboard_Tick(object sender, EventArgs e)
+        async private void timerGetClipboard_Tick(object sender, EventArgs e)
         {
-            string newSentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim();
-            if (newSentence != sentence)
+            string newSentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim().Replace("　","");
+            if (newSentence != Sentence)
             {
-                sentence = newSentence;
-                UpdateMecabResult(RunMecab());
+                Sentence = newSentence;
+                MessageBox.Show(newSentence);
             }
         }
         public bool ClipBoardMode
@@ -242,31 +184,18 @@ namespace ja_learner
             }
         }
 
-        private void btnInputText_Click(object sender, EventArgs e)
+        async private void btnInputText_Click(object sender, EventArgs e)
         {
-            sentence = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Title", "", 0, 0);
-            string json = RunMecab();
-            UpdateMecabResult(json);
+            Sentence = Microsoft.VisualBasic.Interaction.InputBox("手动输入", "输入句子", "", 0, 0);
         }
 
         private void timerSelectWindow_Tick(object sender, EventArgs e)
         {
-            Point cursorPos = new Point();
-            cursorPos.X = Cursor.Position.X;
-            cursorPos.Y = Cursor.Position.Y;
-            // 当前鼠标位置所在窗口的最高父窗口的hwnd
-            IntPtr hwnd = WindowFromPoint(cursorPos);
-            IntPtr parentHwnd;
-            while (true)
-            {
-                parentHwnd = GetParent(hwnd);
-                if (parentHwnd == IntPtr.Zero) break;
-                hwnd = parentHwnd;
-            }
+            IntPtr hwnd = WindowAttacher.GetHwndByCursorPoint();
             textBoxHwnd.Text = hwnd.ToString();
 
             // 判断鼠标是否按下
-            bool mouseDown = (Control.MouseButtons & MouseButtons.Left) == MouseButtons.Left;
+            bool mouseDown = WindowAttacher.MouseDown(MouseButtons.Left);
 
             if (mouseDown)
             {
@@ -293,20 +222,14 @@ namespace ja_learner
             dictForm.Activate();
         }
 
-        public static String GetWindowTitle(IntPtr handle)
-        {
-            int length = GetWindowTextLength(handle);
-            StringBuilder text = new StringBuilder(length + 1);
-            GetWindowText(handle, text, text.Capacity);
-            return text.ToString();
-        }
+
         private void textBoxHwnd_TextChanged(object sender, EventArgs e)
         {
             try
             {
                 IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
-                string windowTitle = GetWindowTitle(hwnd);
-                checkBoxAlignWindow.Text = "与【" + windowTitle + "】对齐";
+                string windowTitle = WindowAttacher.GetWindowTitle(hwnd);
+                checkBoxAlignWindow.Text = $"与【{windowTitle}】对齐";
                 // 判断窗口句柄是不是自己的
                 if (hwnd == this.Handle || hwnd == dictForm.Handle)
                 {
@@ -321,5 +244,30 @@ namespace ja_learner
             }
         }
 
+        async private Task TranslateSentence()
+        {
+            GptCaller gptCaller = new GptCaller();
+            Conversation chat = gptCaller.CreateTranslateConversation(sentence);
+            ClearTranslationText();
+            try
+            {
+                await foreach (var res in chat.StreamResponseEnumerableFromChatbotAsync())
+                {
+                    AppendTranslationText(res.Replace("\n", "<br>"));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        async private void buttonTranslate_Click(object sender, EventArgs e)
+        {
+
+            buttonTranslate.Enabled = false;
+            await TranslateSentence();
+            buttonTranslate.Enabled = true;
+        }
     }
 }
