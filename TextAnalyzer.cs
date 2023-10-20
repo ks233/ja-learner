@@ -32,13 +32,15 @@ namespace ja_learner
         public TextAnalyzer() {
             // 初始化 mecab dotnet
             parameter = new MeCabParam();
-            // 读取用户词典
-            string[] userdic = Directory.GetFiles("dic/userdic");
-            for (int i = 0; i < userdic.Length; i++)
-            {
-                userdic[i] = "userdic/" + Path.GetFileName(userdic[i]);
+            if (Directory.Exists("dic/userdic")){
+                // 读取用户词典
+                string[] userdic = Directory.GetFiles("dic/userdic");
+                for (int i = 0; i < userdic.Length; i++)
+                {
+                    userdic[i] = "userdic/" + Path.GetFileName(userdic[i]);
+                }
+                parameter.UserDic = userdic;
             }
-            parameter.UserDic = userdic;
             tagger = MeCabTagger.Create(parameter);
         }
 

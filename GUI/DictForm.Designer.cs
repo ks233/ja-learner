@@ -79,7 +79,7 @@
             tabPageGpt.Location = new Point(4, 26);
             tabPageGpt.Name = "tabPageGpt";
             tabPageGpt.Padding = new Padding(3);
-            tabPageGpt.Size = new Size(568, 423);
+            tabPageGpt.Size = new Size(416, 431);
             tabPageGpt.TabIndex = 1;
             tabPageGpt.Text = "内容解析";
             tabPageGpt.UseVisualStyleBackColor = true;
@@ -89,7 +89,7 @@
             translationPanel.Dock = DockStyle.Fill;
             translationPanel.Location = new Point(3, 3);
             translationPanel.Name = "translationPanel";
-            translationPanel.Size = new Size(562, 417);
+            translationPanel.Size = new Size(410, 425);
             translationPanel.TabIndex = 0;
             // 
             // DictForm
@@ -100,6 +100,7 @@
             Controls.Add(tabControl1);
             MaximizeBox = false;
             Name = "DictForm";
+            Text = "KS的日语学习工具";
             FormClosing += DictForm_FormClosing;
             Load += DictForm_Load;
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();
