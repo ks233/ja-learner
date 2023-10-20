@@ -10,29 +10,36 @@ namespace ja_learner
 {
     internal class GptCaller
     {
-        OpenAIAPI api;
-        Conversation conversation;
+        private static OpenAIAPI api;
 
-        public GptCaller() {
-            api = new OpenAIAPI(UserConfig.api_key);
-            api.ApiUrlFormat = UserConfig.api_url;
+        public static void Initialize() {
+            SetConfig(UserConfig.api_key, UserConfig.api_url);
         }
 
-        public void CreateTranslateConversation(string text)
+        public static void SetConfig(string api_key, string api_url)
         {
-            conversation = api.Chat.CreateConversation();
+
+            api = new OpenAIAPI(api_key);
+            api.ApiUrlFormat = api_url;
+        }
+
+        public static Conversation CreateTranslateConversation(string text)
+        {
+            Conversation conversation = api.Chat.CreateConversation();
             conversation.AppendSystemMessage("You are a translation engine, translate the text to Simplified Chinese. Don't output anything other than translation results.");
             conversation.AppendUserInput($"{text}");
+            return conversation;
         }
 
-        public void CreateInterpretConversation(string text)
+        public static Conversation CreateInterpretConversation(string text)
         {
-            conversation = api.Chat.CreateConversation();
+            Conversation conversation = api.Chat.CreateConversation();
             conversation.AppendSystemMessage("You are a Japanese teacher, List and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
             conversation.AppendUserInput($"{text}");
+            return conversation;
         }
 
-        async public void StreamResponse(Action<string> callback)
+        async public static void StreamResponse(Conversation conversation, Action<string> callback)
         {
             try
             {

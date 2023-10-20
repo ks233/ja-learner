@@ -13,6 +13,7 @@ namespace ja_learner
         DictForm dictForm;
 
         TextAnalyzer textAnalyzer = new TextAnalyzer();
+        GptCaller gptCaller;
         private string sentence = "";
 
         public string Sentence
@@ -50,6 +51,7 @@ namespace ja_learner
             // 初始化 webview
             await InitializeWebView();
             UserConfig.ReadConfigFile();
+            GptCaller.Initialize();
 #if DEBUG
             webView.Source = new Uri("http://localhost:5173/"); // dev
 #else
@@ -216,10 +218,17 @@ namespace ja_learner
 
         private void buttonShowDictForm_Click(object sender, EventArgs e)
         {
-            dictForm.Show();
-            dictForm.WindowState = FormWindowState.Normal; // 从最小化状态到普通状态
-            dictForm.BringToFront();
-            dictForm.Activate();
+            if (!dictForm.Visible)
+            {
+                dictForm.Show();
+                dictForm.WindowState = FormWindowState.Normal; // 从最小化状态到普通状态
+                dictForm.BringToFront();
+                dictForm.Activate();
+            }
+            else
+            {
+                dictForm.Hide();
+            }
         }
 
 
@@ -246,10 +255,9 @@ namespace ja_learner
 
         async private Task TranslateSentence()
         {
-            GptCaller gptCaller = new GptCaller();
-            gptCaller.CreateTranslateConversation(sentence);
+            var chat = GptCaller.CreateTranslateConversation(sentence);
             ClearTranslationText();
-            gptCaller.StreamResponse(res => AppendTranslationText(res));
+            GptCaller.StreamResponse(chat, res => AppendTranslationText(res));
         }
 
         async private void buttonTranslate_Click(object sender, EventArgs e)

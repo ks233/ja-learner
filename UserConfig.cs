@@ -15,7 +15,7 @@ namespace ja_learner
         {
             string filePath = "config.txt";
 
-            // 使用StreamReader打开文件以逐行读取
+            // 逐行读取config.txt，第一行key第二行url
             using (StreamReader reader = new StreamReader(filePath))
             {
                 try

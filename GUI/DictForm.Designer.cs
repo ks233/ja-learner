@@ -47,7 +47,7 @@
             webView.Dock = DockStyle.Fill;
             webView.Location = new Point(3, 3);
             webView.Name = "webView";
-            webView.Size = new Size(562, 417);
+            webView.Size = new Size(410, 425);
             webView.TabIndex = 0;
             webView.ZoomFactor = 1D;
             // 
@@ -59,7 +59,7 @@
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(576, 453);
+            tabControl1.Size = new Size(424, 461);
             tabControl1.TabIndex = 1;
             // 
             // tabPageDict
@@ -68,7 +68,7 @@
             tabPageDict.Location = new Point(4, 26);
             tabPageDict.Name = "tabPageDict";
             tabPageDict.Padding = new Padding(3);
-            tabPageDict.Size = new Size(568, 423);
+            tabPageDict.Size = new Size(416, 431);
             tabPageDict.TabIndex = 0;
             tabPageDict.Text = "词典";
             tabPageDict.UseVisualStyleBackColor = true;
@@ -96,11 +96,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(576, 453);
+            ClientSize = new Size(424, 461);
             Controls.Add(tabControl1);
             MaximizeBox = false;
             Name = "DictForm";
-            Text = "词典";
             FormClosing += DictForm_FormClosing;
             Load += DictForm_Load;
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();

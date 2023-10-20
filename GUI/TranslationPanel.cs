@@ -28,9 +28,8 @@ namespace ja_learner.GUI
         async private void buttonInterpret_Click(object sender, EventArgs e)
         {
             buttonInterpret.Enabled = false;
-            GptCaller gptCaller = new GptCaller();
-            gptCaller.CreateInterpretConversation(textBoxSentence.Text);
-            gptCaller.StreamResponse(res =>
+            var chat = GptCaller.CreateInterpretConversation(textBoxSentence.Text);
+            GptCaller.StreamResponse(chat, res =>
             {
                 textBoxResult.Text += res.Replace("\n", "\r\n");
                 textBoxResult.ScrollToCaret();
