@@ -99,7 +99,7 @@ namespace ja_learner
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            if (timerWindowAlign.Enabled)
+            if (timerWindowAttach.Enabled)
             {
                 heightAfter = this.Height;
                 dictForm.Width = this.Right - WindowAttacher.TargetWindowRect.Right;
@@ -111,28 +111,28 @@ namespace ja_learner
         private Size sizeBefore; // 记录普通模式下窗口的大小
         private int heightAfter = 200; // 附着模式时，窗体通常会比较矮
 
-        private void checkBoxAlignWindow_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxWindowAttach_CheckedChanged(object sender, EventArgs e)
         {
             WindowAttacher.TargetHwnd = IntPtr.Parse(textBoxHwnd.Text);
-        
-            if (checkBoxAlignWindow.Checked)
+
+            if (checkBoxWindowAttach.Checked)
             {
                 // 记录普通状态的窗口位置，切换到吸附状态下的窗口位置
                 sizeBefore = this.Size;
                 locationBefore = this.Location;
                 this.Height = heightAfter;
-                timerWindowAlign.Enabled = true;
+                timerWindowAttach.Enabled = true;
             }
             else
             {
-                timerWindowAlign.Enabled = false;
+                timerWindowAttach.Enabled = false;
                 heightAfter = this.Height;
                 this.Size = sizeBefore;
                 this.Location = locationBefore;
             }
         }
 
-        private void timerWindowAlign_Tick(object sender, EventArgs e)
+        private void timerWindowAttach_Tick(object sender, EventArgs e)
         {
             try
             {
@@ -140,23 +140,23 @@ namespace ja_learner
             }
             catch (Exception ex)
             {
-                WindowAlign = false;
+                WindowAttach = false;
             }
         }
 
-        private bool windowAlign = false;
+        private bool windowAttach = false;
 
-        public bool WindowAlign
+        public bool WindowAttach
         {
             get
             {
-                return windowAlign;
+                return windowAttach;
             }
             set
             {
-                windowAlign = value;
-                checkBoxAlignWindow.Checked = windowAlign;
-                timerWindowAlign.Enabled = windowAlign;
+                windowAttach = value;
+                checkBoxWindowAttach.Checked = windowAttach;
+                timerWindowAttach.Enabled = windowAttach;
             }
         }
 
@@ -207,7 +207,7 @@ namespace ja_learner
 
         private void btnSelectWindow_Click(object sender, EventArgs e)
         {
-            WindowAlign = false;
+            WindowAttach = false;
             timerSelectWindow.Enabled = true;
         }
 
@@ -238,14 +238,14 @@ namespace ja_learner
             {
                 IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
                 string windowTitle = WindowAttacher.GetWindowTitle(hwnd);
-                checkBoxAlignWindow.Text = $"与【{windowTitle}】对齐";
+                checkBoxWindowAttach.Text = $"与【{windowTitle}】对齐";
                 // 判断窗口句柄是不是自己的
                 if (hwnd == this.Handle || hwnd == dictForm.Handle)
                 {
-                    checkBoxAlignWindow.Enabled = false;
+                    checkBoxWindowAttach.Enabled = false;
                     return;
                 }
-                checkBoxAlignWindow.Enabled = true;
+                checkBoxWindowAttach.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -269,5 +269,6 @@ namespace ja_learner
         {
             TopMost = checkBoxTopmost.Checked;
         }
+
     }
 }

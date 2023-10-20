@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            timerWindowAlign = new System.Windows.Forms.Timer(components);
+            timerWindowAttach = new System.Windows.Forms.Timer(components);
             timerSelectWindow = new System.Windows.Forms.Timer(components);
             tabPageSettings = new TabPage();
             checkBoxTopmost = new CheckBox();
             textBoxHwnd = new TextBox();
             btnSelectWindow = new Button();
-            checkBoxAlignWindow = new CheckBox();
+            checkBoxWindowAttach = new CheckBox();
             tabPageText = new TabPage();
             webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             tabControl = new TabControl();
@@ -54,10 +54,10 @@
             panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // timerWindowAlign
+            // timerWindowAttach
             // 
-            timerWindowAlign.Interval = 15;
-            timerWindowAlign.Tick += timerWindowAlign_Tick;
+            timerWindowAttach.Interval = 15;
+            timerWindowAttach.Tick += timerWindowAttach_Tick;
             // 
             // timerSelectWindow
             // 
@@ -68,11 +68,11 @@
             tabPageSettings.Controls.Add(checkBoxTopmost);
             tabPageSettings.Controls.Add(textBoxHwnd);
             tabPageSettings.Controls.Add(btnSelectWindow);
-            tabPageSettings.Controls.Add(checkBoxAlignWindow);
+            tabPageSettings.Controls.Add(checkBoxWindowAttach);
             tabPageSettings.Location = new Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(536, 348);
+            tabPageSettings.Size = new Size(536, 349);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
@@ -108,17 +108,17 @@
             btnSelectWindow.UseVisualStyleBackColor = true;
             btnSelectWindow.Click += btnSelectWindow_Click;
             // 
-            // checkBoxAlignWindow
+            // checkBoxWindowAttach
             // 
-            checkBoxAlignWindow.AutoSize = true;
-            checkBoxAlignWindow.Enabled = false;
-            checkBoxAlignWindow.Location = new Point(195, 17);
-            checkBoxAlignWindow.Name = "checkBoxAlignWindow";
-            checkBoxAlignWindow.Size = new Size(87, 21);
-            checkBoxAlignWindow.TabIndex = 3;
-            checkBoxAlignWindow.Text = "与窗口对齐";
-            checkBoxAlignWindow.UseVisualStyleBackColor = true;
-            checkBoxAlignWindow.CheckedChanged += checkBoxAlignWindow_CheckedChanged;
+            checkBoxWindowAttach.AutoSize = true;
+            checkBoxWindowAttach.Enabled = false;
+            checkBoxWindowAttach.Location = new Point(195, 17);
+            checkBoxWindowAttach.Name = "checkBoxWindowAttach";
+            checkBoxWindowAttach.Size = new Size(87, 21);
+            checkBoxWindowAttach.TabIndex = 3;
+            checkBoxWindowAttach.Text = "与窗口对齐";
+            checkBoxWindowAttach.UseVisualStyleBackColor = true;
+            checkBoxWindowAttach.CheckedChanged += checkBoxWindowAttach_CheckedChanged;
             // 
             // tabPageText
             // 
@@ -260,7 +260,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.Timer timerWindowAlign;
+        private System.Windows.Forms.Timer timerWindowAttach;
         private System.Windows.Forms.Timer timerSelectWindow;
         private TabPage tabPageSettings;
         private TabPage tabPageText;
@@ -269,7 +269,7 @@
         private System.Windows.Forms.Timer timerGetClipboard;
         private TextBox textBoxHwnd;
         private Button btnSelectWindow;
-        private CheckBox checkBoxAlignWindow;
+        private CheckBox checkBoxWindowAttach;
         private Panel panel1;
         private Button buttonShowDictForm;
         private CheckBox checkBoxDark;
