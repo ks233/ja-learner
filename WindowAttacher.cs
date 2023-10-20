@@ -110,6 +110,9 @@ namespace ja_learner
                 // 对齐宽度
                 if (dictForm.Visible)
                 {
+                    dictForm.Top = rect.Top;
+                    dictForm.Left = rect.Right;
+                    dictForm.Height = rect.Bottom - rect.Top;
                     form.Width = rect.Right - rect.Left + dictForm.Width;
                 }
                 else
@@ -117,9 +120,7 @@ namespace ja_learner
                     form.Width = rect.Right - rect.Left;
                 }
 
-                dictForm.Top = rect.Top;
-                dictForm.Left = rect.Right;
-                dictForm.Height = rect.Bottom - rect.Top;
+
             }
         }
     }

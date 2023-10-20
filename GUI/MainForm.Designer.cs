@@ -32,6 +32,8 @@
             timerWindowAttach = new System.Windows.Forms.Timer(components);
             timerSelectWindow = new System.Windows.Forms.Timer(components);
             tabPageSettings = new TabPage();
+            checkBoxUseExtraPrompt = new CheckBox();
+            buttonUpdateExtraPrompt = new Button();
             checkBoxTopmost = new CheckBox();
             textBoxHwnd = new TextBox();
             btnSelectWindow = new Button();
@@ -65,6 +67,8 @@
             // 
             // tabPageSettings
             // 
+            tabPageSettings.Controls.Add(checkBoxUseExtraPrompt);
+            tabPageSettings.Controls.Add(buttonUpdateExtraPrompt);
             tabPageSettings.Controls.Add(checkBoxTopmost);
             tabPageSettings.Controls.Add(textBoxHwnd);
             tabPageSettings.Controls.Add(btnSelectWindow);
@@ -76,6 +80,27 @@
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseExtraPrompt
+            // 
+            checkBoxUseExtraPrompt.AutoSize = true;
+            checkBoxUseExtraPrompt.Location = new Point(195, 97);
+            checkBoxUseExtraPrompt.Name = "checkBoxUseExtraPrompt";
+            checkBoxUseExtraPrompt.Size = new Size(118, 21);
+            checkBoxUseExtraPrompt.TabIndex = 7;
+            checkBoxUseExtraPrompt.Text = "使用额外Prompt";
+            checkBoxUseExtraPrompt.UseVisualStyleBackColor = true;
+            checkBoxUseExtraPrompt.CheckedChanged += checkBoxUseExtraPrompt_CheckedChanged;
+            // 
+            // buttonUpdateExtraPrompt
+            // 
+            buttonUpdateExtraPrompt.Location = new Point(8, 95);
+            buttonUpdateExtraPrompt.Name = "buttonUpdateExtraPrompt";
+            buttonUpdateExtraPrompt.Size = new Size(181, 23);
+            buttonUpdateExtraPrompt.TabIndex = 6;
+            buttonUpdateExtraPrompt.Text = "重新读取extra_prompt.txt";
+            buttonUpdateExtraPrompt.UseVisualStyleBackColor = true;
+            buttonUpdateExtraPrompt.Click += buttonUpdateExtraPrompt_Click;
             // 
             // checkBoxTopmost
             // 
@@ -279,5 +304,7 @@
         private Button buttonTranslate;
         private CheckBox checkBoxAutoTranslate;
         private CheckBox checkBoxTopmost;
+        private CheckBox checkBoxUseExtraPrompt;
+        private Button buttonUpdateExtraPrompt;
     }
 }

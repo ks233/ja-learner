@@ -5,6 +5,7 @@ using MeCab;
 using System.Text;
 using System.Reflection.Metadata;
 using OpenAI_API.Chat;
+using Microsoft.VisualBasic;
 
 namespace ja_learner
 {
@@ -61,7 +62,8 @@ namespace ja_learner
 #endif
 
             dictForm = new DictForm(this);
-
+            dictForm.Show();
+            dictForm.Hide();
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -102,7 +104,10 @@ namespace ja_learner
             if (timerWindowAttach.Enabled)
             {
                 heightAfter = this.Height;
-                dictForm.Width = this.Right - WindowAttacher.TargetWindowRect.Right;
+                if (dictForm.Visible)
+                {
+                    dictForm.Width = this.Right - WindowAttacher.TargetWindowRect.Right;
+                }
             }
         }
 
@@ -270,5 +275,15 @@ namespace ja_learner
             TopMost = checkBoxTopmost.Checked;
         }
 
+        private void buttonUpdateExtraPrompt_Click(object sender, EventArgs e)
+        {
+            UserConfig.UpdateExtraPrompt();
+            MessageBox.Show("µ±«∞∂ÓÕ‚Prompt:\n" + UserConfig.extraPrompt);
+        }
+
+        private void checkBoxUseExtraPrompt_CheckedChanged(object sender, EventArgs e)
+        {
+            UserConfig.useExtraPrompt = checkBoxUseExtraPrompt.Checked;
+        }
     }
 }

@@ -8,23 +8,35 @@ namespace ja_learner
 {
     internal class UserConfig
     {
-        public static string api_key = "";
-        public static string api_url = "";
+        public static string apiKey = "";
+        public static string apiUrl = "";
+        public static string extraPrompt = "";
+        public static bool useExtraPrompt = false;
 
         public static void ReadConfigFile()
         {
             string filePath = "config.txt";
-
             // 逐行读取config.txt，第一行key第二行url
             using (StreamReader reader = new StreamReader(filePath))
             {
                 try
                 {
-                    api_key = reader.ReadLine();
-                    api_url = reader.ReadLine();
+                    apiKey = reader.ReadLine();
+                    apiUrl = reader.ReadLine();
                 }
                 catch { }
             }
+            UpdateExtraPrompt();
+        }
+
+        public static void UpdateExtraPrompt()
+        {
+            string filePath = "extra_prompt.txt";
+            try
+            {
+                extraPrompt = File.ReadAllText(filePath);
+            }
+            catch { }
         }
     }
 }

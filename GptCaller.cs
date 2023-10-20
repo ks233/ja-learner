@@ -13,7 +13,7 @@ namespace ja_learner
         private static OpenAIAPI api;
 
         public static void Initialize() {
-            SetConfig(UserConfig.api_key, UserConfig.api_url);
+            SetConfig(UserConfig.apiKey, UserConfig.apiUrl);
         }
 
         public static void SetConfig(string api_key, string api_url)
@@ -27,6 +27,10 @@ namespace ja_learner
         {
             Conversation conversation = api.Chat.CreateConversation();
             conversation.AppendSystemMessage("You are a translation engine, translate the text to Simplified Chinese. Don't output anything other than translation results.");
+            if (UserConfig.useExtraPrompt)
+            {
+                AddExtraSystemPrompt(conversation);
+            }
             conversation.AppendUserInput($"{text}");
             return conversation;
         }
@@ -35,8 +39,20 @@ namespace ja_learner
         {
             Conversation conversation = api.Chat.CreateConversation();
             conversation.AppendSystemMessage("You are a Japanese teacher, List and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
+            if(UserConfig.useExtraPrompt)
+            {
+                AddExtraSystemPrompt(conversation);
+            }
             conversation.AppendUserInput($"{text}");
             return conversation;
+        }
+
+        private static void AddExtraSystemPrompt(Conversation conversation)
+        {
+            if (UserConfig.extraPrompt.Length > 0)
+            {
+                conversation.AppendSystemMessage(UserConfig.extraPrompt);
+            }
         }
 
         async public static void StreamResponse(Conversation conversation, Action<string> callback)

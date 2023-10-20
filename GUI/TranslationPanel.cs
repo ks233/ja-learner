@@ -27,6 +27,7 @@ namespace ja_learner.GUI
 
         async private void buttonInterpret_Click(object sender, EventArgs e)
         {
+            textBoxResult.Text = "";
             buttonInterpret.Enabled = false;
             var chat = GptCaller.CreateInterpretConversation(textBoxSentence.Text);
             GptCaller.StreamResponse(chat, res =>
