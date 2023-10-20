@@ -47,7 +47,27 @@ namespace ja_learner
             public int Y;
         }
 
+        private static IntPtr targetHwnd;
 
+        public static IntPtr TargetHwnd { 
+            get { 
+                return targetHwnd; 
+            }
+            set
+            {
+                targetHwnd = value;
+            }
+        }
+
+        public static Rectangle TargetWindowRect
+        {
+            get
+            {
+                Rectangle rect;
+                GetWindowRect(targetHwnd, out rect);
+                return rect;
+            }
+        }
 
         public static String GetWindowTitle(IntPtr handle)
         {
@@ -79,19 +99,27 @@ namespace ja_learner
             return (Control.MouseButtons & button) == button;
         }
 
-        public static void AttachWindows(Form form, Form dictForm, IntPtr hwnd)
+        public static void AttachWindows(Form form, Form dictForm)
         {
             // 调用 GetWindowRect 函数获取窗口位置和大小
             Rectangle rect;
-            if (GetWindowRect(hwnd, out rect))
+            if (GetWindowRect(TargetHwnd, out rect))
             {
                 form.Top = rect.Bottom;
                 form.Left = rect.Left;
-                form.Width = rect.Right - rect.Left; // 对齐宽度
+                // 对齐宽度
+                if (dictForm.Visible)
+                {
+                    form.Width = rect.Right - rect.Left + dictForm.Width;
+                }
+                else
+                {
+                    form.Width = rect.Right - rect.Left;
+                }
 
                 dictForm.Top = rect.Top;
                 dictForm.Left = rect.Right;
-                dictForm.Height = form.Bottom - rect.Top;
+                dictForm.Height = rect.Bottom - rect.Top;
             }
         }
     }

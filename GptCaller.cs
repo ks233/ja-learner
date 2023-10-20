@@ -11,27 +11,40 @@ namespace ja_learner
     internal class GptCaller
     {
         OpenAIAPI api;
-
+        Conversation conversation;
 
         public GptCaller() {
             api = new OpenAIAPI(UserConfig.api_key);
             api.ApiUrlFormat = UserConfig.api_url;
         }
 
-        public Conversation CreateTranslateConversation(string text)
+        public void CreateTranslateConversation(string text)
         {
-            var chat = api.Chat.CreateConversation();
-            chat.AppendSystemMessage("You are a translation engine, translate the text to Simplified Chinese. Don't output anything other than translation results.");
-            chat.AppendUserInput($"{text}");
-            return chat;
+            conversation = api.Chat.CreateConversation();
+            conversation.AppendSystemMessage("You are a translation engine, translate the text to Simplified Chinese. Don't output anything other than translation results.");
+            conversation.AppendUserInput($"{text}");
         }
 
-        public Conversation CreateInterpretConversation(string text)
+        public void CreateInterpretConversation(string text)
         {
-            var chat = api.Chat.CreateConversation();
-            chat.AppendSystemMessage("You are a Japanese teacher, list and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
-            chat.AppendUserInput($"{text}");
-            return chat;
+            conversation = api.Chat.CreateConversation();
+            conversation.AppendSystemMessage("You are a Japanese teacher, List and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
+            conversation.AppendUserInput($"{text}");
+        }
+
+        async public void StreamResponse(Action<string> callback)
+        {
+            try
+            {
+                await foreach (var res in conversation.StreamResponseEnumerableFromChatbotAsync())
+                {
+                    callback(res);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

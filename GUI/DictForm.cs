@@ -63,7 +63,7 @@ namespace ja_learner
 #if DEBUG
             webView.Source = new Uri("http://localhost:5173/dict"); // dev
 #else
-            webView.Source = new Uri("http://localhost:8080/dict"); // build
+            webView.Source = new Uri($"http://localhost:{HttpServer.Port}/dict"); // build
 #endif
         }
 

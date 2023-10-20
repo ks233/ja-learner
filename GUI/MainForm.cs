@@ -33,7 +33,6 @@ namespace ja_learner
         public MainForm()
         {
             InitializeComponent();
-            // DisableCors();
         }
         private async Task InitializeWebView()
         {
@@ -45,7 +44,8 @@ namespace ja_learner
             // 接收js消息（查词典）
             webView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
         }
-        private async void Form1_Load(object sender, EventArgs e)
+
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             // 初始化 webview
             await InitializeWebView();
@@ -55,12 +55,11 @@ namespace ja_learner
 #else
             // 初始化 HTTP 服务器
             HttpServer.StartServer();
-            webView.Source = new Uri("http://localhost:8080/"); // build
+            webView.Source = new Uri($"http://localhost:{HttpServer.Port}/"); // build
 #endif
 
             dictForm = new DictForm(this);
-            dictForm.Show();
-            dictForm.Hide();
+
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -83,8 +82,7 @@ namespace ja_learner
 
         private async void UpdateMecabResult(string json)
         {
-            string result = await webView.ExecuteScriptAsync($"updateData({json})");
-
+            await webView.ExecuteScriptAsync($"updateData({json})");
         }
 
         private async void AppendTranslationText(string text)
@@ -96,11 +94,13 @@ namespace ja_learner
             await webView.ExecuteScriptAsync($"clearTranslationText()");
         }
 
-        private void Form1_SizeChanged(object sender, EventArgs e)
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
         {
             if (timerWindowAlign.Enabled)
             {
                 heightAfter = this.Height;
+                dictForm.Width = this.Right - WindowAttacher.TargetWindowRect.Right;
             }
         }
 
@@ -111,6 +111,8 @@ namespace ja_learner
 
         private void checkBoxAlignWindow_CheckedChanged(object sender, EventArgs e)
         {
+            WindowAttacher.TargetHwnd = IntPtr.Parse(textBoxHwnd.Text);
+        
             if (checkBoxAlignWindow.Checked)
             {
                 // 记录普通状态的窗口位置，切换到吸附状态下的窗口位置
@@ -130,10 +132,9 @@ namespace ja_learner
 
         private void timerWindowAlign_Tick(object sender, EventArgs e)
         {
-            IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
             try
             {
-                WindowAttacher.AttachWindows(this, dictForm, hwnd);
+                WindowAttacher.AttachWindows(this, dictForm);
             }
             catch (Exception ex)
             {
@@ -183,7 +184,7 @@ namespace ja_learner
             }
         }
 
-        async private void btnInputText_Click(object sender, EventArgs e)
+        private void btnInputText_Click(object sender, EventArgs e)
         {
             Sentence = Microsoft.VisualBasic.Interaction.InputBox("手动输入", "输入句子", "", 0, 0);
         }
@@ -246,19 +247,9 @@ namespace ja_learner
         async private Task TranslateSentence()
         {
             GptCaller gptCaller = new GptCaller();
-            Conversation chat = gptCaller.CreateTranslateConversation(sentence);
+            gptCaller.CreateTranslateConversation(sentence);
             ClearTranslationText();
-            try
-            {
-                await foreach (var res in chat.StreamResponseEnumerableFromChatbotAsync())
-                {
-                    AppendTranslationText(res);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            gptCaller.StreamResponse(res => AppendTranslationText(res));
         }
 
         async private void buttonTranslate_Click(object sender, EventArgs e)

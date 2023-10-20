@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +14,9 @@ namespace ja_learner
         private static HttpListener _httpListener;
         public static void StartServer()
         {
+            port = FindAvailablePort();
             _httpListener = new HttpListener();
-            _httpListener.Prefixes.Add("http://localhost:8080/"); // 服务器监听的URL和端口号
+            _httpListener.Prefixes.Add($"http://localhost:{port}/"); // 服务器监听的URL和端口号
 
             Task.Run(() =>
             {
@@ -33,6 +35,49 @@ namespace ja_learner
                     Console.WriteLine(ex);
                 }
             });
+        }
+
+        private static int port;
+
+        public static int Port
+        {
+            get { return port; }
+        }
+
+
+        static int FindAvailablePort()
+        {
+            int port = 8080;
+            while (IsPortInUse(port) && port < 65536)
+            {
+                port++;
+            }
+            return port;
+        }
+
+        static bool IsPortInUse(int port)
+        {
+            IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
+            IPEndPoint[] activeTcpListeners = properties.GetActiveTcpListeners();
+            IPEndPoint[] activeUdpListeners = properties.GetActiveUdpListeners();
+
+            foreach (IPEndPoint endPoint in activeTcpListeners)
+            {
+                if (endPoint.Port == port)
+                {
+                    return true;
+                }
+            }
+
+            foreach (IPEndPoint endPoint in activeUdpListeners)
+            {
+                if (endPoint.Port == port)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static async void HandleRequest(HttpListenerContext context)

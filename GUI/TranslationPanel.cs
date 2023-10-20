@@ -29,22 +29,13 @@ namespace ja_learner.GUI
         {
             buttonInterpret.Enabled = false;
             GptCaller gptCaller = new GptCaller();
-            Conversation chat = gptCaller.CreateInterpretConversation(textBoxSentence.Text);
-            try
+            gptCaller.CreateInterpretConversation(textBoxSentence.Text);
+            gptCaller.StreamResponse(res =>
             {
-                string response = "";
-                textBoxResult.Text = "";
-                await foreach (var res in chat.StreamResponseEnumerableFromChatbotAsync())
-                {
-                    textBoxResult.Text += res.Replace("\n", "\r\n");
-                    response += res;
-                    textBoxResult.ScrollToCaret();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                textBoxResult.Text += res.Replace("\n", "\r\n");
+                textBoxResult.ScrollToCaret();
+            });
+
             buttonInterpret.Enabled = true;
         }
     }
