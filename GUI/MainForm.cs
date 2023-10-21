@@ -6,6 +6,8 @@ using System.Text;
 using System.Reflection.Metadata;
 using OpenAI_API.Chat;
 using Microsoft.VisualBasic;
+using System.Windows.Forms.Design;
+using System.Net.Http;
 
 namespace ja_learner
 {
@@ -64,6 +66,7 @@ namespace ja_learner
             dictForm = new DictForm(this);
             dictForm.Show();
             dictForm.Hide();
+            UpdateExtraPromptCombobox();
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -278,12 +281,58 @@ namespace ja_learner
         private void buttonUpdateExtraPrompt_Click(object sender, EventArgs e)
         {
             UserConfig.UpdateExtraPrompt();
-            MessageBox.Show("当前额外Prompt:\n" + UserConfig.extraPrompt);
+            MessageBox.Show($"已重新读取文件{UserConfig.ExtraPromptFilename}:\n" + UserConfig.extraPrompt);
         }
 
         private void checkBoxUseExtraPrompt_CheckedChanged(object sender, EventArgs e)
         {
             UserConfig.useExtraPrompt = checkBoxUseExtraPrompt.Checked;
+        }
+
+        private void comboBoxExtraPrompts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxExtraPrompts.SelectedIndex != -1)
+            {
+                checkBoxUseExtraPrompt.Enabled = true;
+            }
+            UserConfig.ExtraPromptFilename = comboBoxExtraPrompts.Text;
+        }
+
+        private void UpdateExtraPromptCombobox()
+        {
+            string text = comboBoxExtraPrompts.Text;
+            comboBoxExtraPrompts.Items.Clear();
+            string[] extra_prompt_files = UserConfig.GetExtraPromptFiles();
+            foreach (string filename in extra_prompt_files)
+            {
+                comboBoxExtraPrompts.Items.Add(filename);
+
+                if (filename == text)
+                {
+                    comboBoxExtraPrompts.SelectedIndex = comboBoxExtraPrompts.Items.Count - 1;
+                }
+            }
+            if (comboBoxExtraPrompts.SelectedIndex == -1)
+            {
+                checkBoxUseExtraPrompt.Enabled = false;
+            }
+        }
+
+        private void comboBoxExtraPrompts_Click(object sender, EventArgs e)
+        {
+            UpdateExtraPromptCombobox();
+        }
+
+        async private void checkBoxTranslateKatakana_CheckedChanged(object sender, EventArgs e)
+        {
+
+            await webView.ExecuteScriptAsync($"setTranslateKatakana({checkBoxTranslateKatakana.Checked.ToString().ToLower()})");
+        }
+
+        async private void buttonGoogleTrans_Click(object sender, EventArgs e)
+        {
+            // 这个接口效果真的好烂。。。用来翻译片假名还可以，翻译句子真就生草机
+            await webView.ExecuteScriptAsync($"runGoogleTrans(\"{sentence}\")");
         }
     }
 }

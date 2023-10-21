@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +18,9 @@ namespace ja_learner
             port = FindAvailablePort();
             _httpListener = new HttpListener();
             _httpListener.Prefixes.Add($"http://localhost:{port}/"); // 服务器监听的URL和端口号
+
+            proxyDict["/mojiapi"] = "https://api.mojidict.com";
+            proxyDict["/googletrans"] = "https://clients5.google.com/translate_a";
 
             Task.Run(() =>
             {
@@ -80,6 +84,22 @@ namespace ja_learner
             return false;
         }
 
+        private static Dictionary<string, string> proxyDict = new Dictionary<string, string>();
+
+        private static bool StartsWithProxy(string url, out string proxyName)
+        {
+            foreach(string key in proxyDict.Keys)
+            {
+                if (url.StartsWith(key))
+                {
+                    proxyName = key;
+                    return true;
+                }
+            }
+            proxyName = "";
+            return false;
+        }
+
         private static async void HandleRequest(HttpListenerContext context)
         {
             var request = context.Request;
@@ -91,21 +111,31 @@ namespace ja_learner
 
             string url = request.Url.LocalPath;
 
-            // 代理 mojiapi
-            if (url.StartsWith("/mojiapi"))
+            string proxyName = proxyDict.Keys.FirstOrDefault(key => url.StartsWith(key));
+            // 代理
+            if (proxyName != null)
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    string apiUrl = url.Replace("/mojiapi", "https://api.mojidict.com");
-                    string json = ""; 
-                    using (StreamReader reader = new StreamReader(request.InputStream))
-                    {
-                        json = reader.ReadToEnd();
-                    }
-                    httpClient.DefaultRequestHeaders.Clear();
-                    HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-                    HttpResponseMessage r = await httpClient.PostAsync(apiUrl, content);
+                    // string apiUrl = url.Replace("/mojiapi", "https://api.mojidict.com");
 
+                    HttpResponseMessage r;
+                    string apiUrl = url.Replace(proxyName, proxyDict[proxyName]);
+                    if (request.HttpMethod == "GET")
+                    {
+                        r = await httpClient.GetAsync(request.RawUrl.Replace(proxyName, proxyDict[proxyName]));
+                    }
+                    else
+                    {
+                        string json = "";
+                        using (StreamReader reader = new StreamReader(request.InputStream))
+                        {
+                            json = reader.ReadToEnd();
+                        }
+                        httpClient.DefaultRequestHeaders.Clear();
+                        HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                        r = await httpClient.PostAsync(apiUrl, content);
+                    }
                     // 将代理请求的响应返回给客户端
                     response.StatusCode = (int)r.StatusCode;
                     response.ContentType = r.Content.Headers.ContentType?.ToString();

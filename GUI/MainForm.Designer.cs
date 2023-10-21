@@ -32,8 +32,10 @@
             timerWindowAttach = new System.Windows.Forms.Timer(components);
             timerSelectWindow = new System.Windows.Forms.Timer(components);
             tabPageSettings = new TabPage();
+            comboBoxExtraPrompts = new ComboBox();
             checkBoxUseExtraPrompt = new CheckBox();
             buttonUpdateExtraPrompt = new Button();
+            checkBoxDark = new CheckBox();
             checkBoxTopmost = new CheckBox();
             textBoxHwnd = new TextBox();
             btnSelectWindow = new Button();
@@ -43,10 +45,11 @@
             tabControl = new TabControl();
             timerGetClipboard = new System.Windows.Forms.Timer(components);
             panel1 = new Panel();
+            buttonGoogleTrans = new Button();
+            checkBoxTranslateKatakana = new CheckBox();
             checkBoxAutoTranslate = new CheckBox();
             buttonTranslate = new Button();
             buttonShowDictForm = new Button();
-            checkBoxDark = new CheckBox();
             btnInputText = new Button();
             checkBoxClipboardMode = new CheckBox();
             tabPageSettings.SuspendLayout();
@@ -67,8 +70,10 @@
             // 
             // tabPageSettings
             // 
+            tabPageSettings.Controls.Add(comboBoxExtraPrompts);
             tabPageSettings.Controls.Add(checkBoxUseExtraPrompt);
             tabPageSettings.Controls.Add(buttonUpdateExtraPrompt);
+            tabPageSettings.Controls.Add(checkBoxDark);
             tabPageSettings.Controls.Add(checkBoxTopmost);
             tabPageSettings.Controls.Add(textBoxHwnd);
             tabPageSettings.Controls.Add(btnSelectWindow);
@@ -76,15 +81,28 @@
             tabPageSettings.Location = new Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(536, 349);
+            tabPageSettings.Size = new Size(576, 179);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
             // 
+            // comboBoxExtraPrompts
+            // 
+            comboBoxExtraPrompts.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxExtraPrompts.FormattingEnabled = true;
+            comboBoxExtraPrompts.Location = new Point(132, 79);
+            comboBoxExtraPrompts.Name = "comboBoxExtraPrompts";
+            comboBoxExtraPrompts.Size = new Size(116, 25);
+            comboBoxExtraPrompts.Sorted = true;
+            comboBoxExtraPrompts.TabIndex = 8;
+            comboBoxExtraPrompts.SelectedIndexChanged += comboBoxExtraPrompts_SelectedIndexChanged;
+            comboBoxExtraPrompts.Click += comboBoxExtraPrompts_Click;
+            // 
             // checkBoxUseExtraPrompt
             // 
             checkBoxUseExtraPrompt.AutoSize = true;
-            checkBoxUseExtraPrompt.Location = new Point(195, 97);
+            checkBoxUseExtraPrompt.Enabled = false;
+            checkBoxUseExtraPrompt.Location = new Point(8, 81);
             checkBoxUseExtraPrompt.Name = "checkBoxUseExtraPrompt";
             checkBoxUseExtraPrompt.Size = new Size(118, 21);
             checkBoxUseExtraPrompt.TabIndex = 7;
@@ -94,18 +112,29 @@
             // 
             // buttonUpdateExtraPrompt
             // 
-            buttonUpdateExtraPrompt.Location = new Point(8, 95);
+            buttonUpdateExtraPrompt.Location = new Point(254, 77);
             buttonUpdateExtraPrompt.Name = "buttonUpdateExtraPrompt";
-            buttonUpdateExtraPrompt.Size = new Size(181, 23);
+            buttonUpdateExtraPrompt.Size = new Size(75, 27);
             buttonUpdateExtraPrompt.TabIndex = 6;
-            buttonUpdateExtraPrompt.Text = "重新读取extra_prompt.txt";
+            buttonUpdateExtraPrompt.Text = "重新读取";
             buttonUpdateExtraPrompt.UseVisualStyleBackColor = true;
             buttonUpdateExtraPrompt.Click += buttonUpdateExtraPrompt_Click;
+            // 
+            // checkBoxDark
+            // 
+            checkBoxDark.AutoSize = true;
+            checkBoxDark.Location = new Point(113, 50);
+            checkBoxDark.Name = "checkBoxDark";
+            checkBoxDark.Size = new Size(75, 21);
+            checkBoxDark.TabIndex = 6;
+            checkBoxDark.Text = "深色模式";
+            checkBoxDark.UseVisualStyleBackColor = true;
+            checkBoxDark.Click += checkBoxDark_CheckedChanged;
             // 
             // checkBoxTopmost
             // 
             checkBoxTopmost.AutoSize = true;
-            checkBoxTopmost.Location = new Point(8, 44);
+            checkBoxTopmost.Location = new Point(8, 50);
             checkBoxTopmost.Name = "checkBoxTopmost";
             checkBoxTopmost.Size = new Size(99, 21);
             checkBoxTopmost.TabIndex = 5;
@@ -125,7 +154,7 @@
             // 
             // btnSelectWindow
             // 
-            btnSelectWindow.Location = new Point(8, 15);
+            btnSelectWindow.Location = new Point(6, 15);
             btnSelectWindow.Name = "btnSelectWindow";
             btnSelectWindow.Size = new Size(75, 23);
             btnSelectWindow.TabIndex = 4;
@@ -151,7 +180,7 @@
             tabPageText.Location = new Point(4, 26);
             tabPageText.Name = "tabPageText";
             tabPageText.Padding = new Padding(3);
-            tabPageText.Size = new Size(536, 349);
+            tabPageText.Size = new Size(616, 199);
             tabPageText.TabIndex = 1;
             tabPageText.Text = "分词断句";
             tabPageText.UseVisualStyleBackColor = true;
@@ -164,7 +193,7 @@
             webView.Dock = DockStyle.Fill;
             webView.Location = new Point(3, 3);
             webView.Name = "webView";
-            webView.Size = new Size(530, 343);
+            webView.Size = new Size(610, 193);
             webView.TabIndex = 1;
             webView.ZoomFactor = 1D;
             // 
@@ -176,7 +205,7 @@
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(544, 379);
+            tabControl.Size = new Size(624, 229);
             tabControl.TabIndex = 2;
             // 
             // timerGetClipboard
@@ -186,23 +215,46 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(buttonGoogleTrans);
+            panel1.Controls.Add(checkBoxTranslateKatakana);
             panel1.Controls.Add(checkBoxAutoTranslate);
             panel1.Controls.Add(buttonTranslate);
             panel1.Controls.Add(buttonShowDictForm);
-            panel1.Controls.Add(checkBoxDark);
             panel1.Controls.Add(btnInputText);
             panel1.Controls.Add(checkBoxClipboardMode);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 379);
+            panel1.Location = new Point(0, 229);
             panel1.Name = "panel1";
-            panel1.Size = new Size(544, 32);
+            panel1.Size = new Size(624, 32);
             panel1.TabIndex = 3;
+            // 
+            // buttonGoogleTrans
+            // 
+            buttonGoogleTrans.Location = new Point(321, 4);
+            buttonGoogleTrans.Name = "buttonGoogleTrans";
+            buttonGoogleTrans.Size = new Size(57, 23);
+            buttonGoogleTrans.TabIndex = 11;
+            buttonGoogleTrans.Text = "生草机";
+            buttonGoogleTrans.UseVisualStyleBackColor = true;
+            buttonGoogleTrans.Click += buttonGoogleTrans_Click;
+            // 
+            // checkBoxTranslateKatakana
+            // 
+            checkBoxTranslateKatakana.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            checkBoxTranslateKatakana.AutoSize = true;
+            checkBoxTranslateKatakana.Location = new Point(474, 6);
+            checkBoxTranslateKatakana.Name = "checkBoxTranslateKatakana";
+            checkBoxTranslateKatakana.Size = new Size(75, 21);
+            checkBoxTranslateKatakana.TabIndex = 10;
+            checkBoxTranslateKatakana.Text = "片假不留";
+            checkBoxTranslateKatakana.UseVisualStyleBackColor = true;
+            checkBoxTranslateKatakana.CheckedChanged += checkBoxTranslateKatakana_CheckedChanged;
             // 
             // checkBoxAutoTranslate
             // 
-            checkBoxAutoTranslate.Anchor = AnchorStyles.Right;
+            checkBoxAutoTranslate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             checkBoxAutoTranslate.AutoSize = true;
-            checkBoxAutoTranslate.Location = new Point(376, 6);
+            checkBoxAutoTranslate.Location = new Point(549, 6);
             checkBoxAutoTranslate.Name = "checkBoxAutoTranslate";
             checkBoxAutoTranslate.Size = new Size(75, 21);
             checkBoxAutoTranslate.TabIndex = 9;
@@ -213,9 +265,9 @@
             // 
             buttonTranslate.Location = new Point(248, 4);
             buttonTranslate.Name = "buttonTranslate";
-            buttonTranslate.Size = new Size(93, 23);
+            buttonTranslate.Size = new Size(67, 23);
             buttonTranslate.TabIndex = 8;
-            buttonTranslate.Text = "GPT参考翻译";
+            buttonTranslate.Text = "GPT翻译";
             buttonTranslate.UseVisualStyleBackColor = true;
             buttonTranslate.Click += buttonTranslate_Click;
             // 
@@ -228,18 +280,6 @@
             buttonShowDictForm.Text = "词典窗口";
             buttonShowDictForm.UseVisualStyleBackColor = true;
             buttonShowDictForm.Click += buttonShowDictForm_Click;
-            // 
-            // checkBoxDark
-            // 
-            checkBoxDark.Anchor = AnchorStyles.Right;
-            checkBoxDark.AutoSize = true;
-            checkBoxDark.Location = new Point(457, 6);
-            checkBoxDark.Name = "checkBoxDark";
-            checkBoxDark.Size = new Size(75, 21);
-            checkBoxDark.TabIndex = 6;
-            checkBoxDark.Text = "深色模式";
-            checkBoxDark.UseVisualStyleBackColor = true;
-            checkBoxDark.Click += checkBoxDark_CheckedChanged;
             // 
             // btnInputText
             // 
@@ -266,10 +306,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(544, 411);
+            ClientSize = new Size(624, 261);
             Controls.Add(panel1);
             Controls.Add(tabControl);
-            MinimumSize = new Size(560, 200);
+            MinimumSize = new Size(560, 250);
             Name = "MainForm";
             Text = "KS的日语学习工具";
             Load += MainForm_Load;
@@ -306,5 +346,8 @@
         private CheckBox checkBoxTopmost;
         private CheckBox checkBoxUseExtraPrompt;
         private Button buttonUpdateExtraPrompt;
+        private ComboBox comboBoxExtraPrompts;
+        private CheckBox checkBoxTranslateKatakana;
+        private Button buttonGoogleTrans;
     }
 }

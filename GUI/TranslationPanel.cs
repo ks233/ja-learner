@@ -25,7 +25,7 @@ namespace ja_learner.GUI
             textBoxSentence.Text = text;
         }
 
-        async private void buttonInterpret_Click(object sender, EventArgs e)
+        private void buttonInterpret_Click(object sender, EventArgs e)
         {
             textBoxResult.Text = "";
             buttonInterpret.Enabled = false;

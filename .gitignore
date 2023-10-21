@@ -398,4 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 config.txt
-extra_prompt.txt
+extra_prompts/
