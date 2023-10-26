@@ -45,7 +45,7 @@
             tabControl = new TabControl();
             timerGetClipboard = new System.Windows.Forms.Timer(components);
             panel1 = new Panel();
-            buttonGoogleTrans = new Button();
+            comboBoxTranslator = new ComboBox();
             checkBoxTranslateKatakana = new CheckBox();
             checkBoxAutoTranslate = new CheckBox();
             buttonTranslate = new Button();
@@ -81,7 +81,7 @@
             tabPageSettings.Location = new Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(576, 179);
+            tabPageSettings.Size = new Size(616, 199);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
@@ -215,7 +215,7 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(buttonGoogleTrans);
+            panel1.Controls.Add(comboBoxTranslator);
             panel1.Controls.Add(checkBoxTranslateKatakana);
             panel1.Controls.Add(checkBoxAutoTranslate);
             panel1.Controls.Add(buttonTranslate);
@@ -223,26 +223,27 @@
             panel1.Controls.Add(btnInputText);
             panel1.Controls.Add(checkBoxClipboardMode);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 229);
+            panel1.Location = new Point(0, 225);
             panel1.Name = "panel1";
-            panel1.Size = new Size(624, 32);
+            panel1.Size = new Size(624, 36);
             panel1.TabIndex = 3;
             // 
-            // buttonGoogleTrans
+            // comboBoxTranslator
             // 
-            buttonGoogleTrans.Location = new Point(321, 4);
-            buttonGoogleTrans.Name = "buttonGoogleTrans";
-            buttonGoogleTrans.Size = new Size(57, 23);
-            buttonGoogleTrans.TabIndex = 11;
-            buttonGoogleTrans.Text = "生草机";
-            buttonGoogleTrans.UseVisualStyleBackColor = true;
-            buttonGoogleTrans.Click += buttonGoogleTrans_Click;
+            comboBoxTranslator.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            comboBoxTranslator.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxTranslator.FormattingEnabled = true;
+            comboBoxTranslator.Items.AddRange(new object[] { "ChatGPT", "谷歌生草机" });
+            comboBoxTranslator.Location = new Point(372, 6);
+            comboBoxTranslator.Name = "comboBoxTranslator";
+            comboBoxTranslator.Size = new Size(86, 25);
+            comboBoxTranslator.TabIndex = 12;
             // 
             // checkBoxTranslateKatakana
             // 
             checkBoxTranslateKatakana.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             checkBoxTranslateKatakana.AutoSize = true;
-            checkBoxTranslateKatakana.Location = new Point(474, 6);
+            checkBoxTranslateKatakana.Location = new Point(545, 8);
             checkBoxTranslateKatakana.Name = "checkBoxTranslateKatakana";
             checkBoxTranslateKatakana.Size = new Size(75, 21);
             checkBoxTranslateKatakana.TabIndex = 10;
@@ -254,7 +255,7 @@
             // 
             checkBoxAutoTranslate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             checkBoxAutoTranslate.AutoSize = true;
-            checkBoxAutoTranslate.Location = new Point(549, 6);
+            checkBoxAutoTranslate.Location = new Point(469, 8);
             checkBoxAutoTranslate.Name = "checkBoxAutoTranslate";
             checkBoxAutoTranslate.Size = new Size(75, 21);
             checkBoxAutoTranslate.TabIndex = 9;
@@ -263,19 +264,20 @@
             // 
             // buttonTranslate
             // 
-            buttonTranslate.Location = new Point(248, 4);
+            buttonTranslate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonTranslate.Location = new Point(321, 5);
             buttonTranslate.Name = "buttonTranslate";
-            buttonTranslate.Size = new Size(67, 23);
+            buttonTranslate.Size = new Size(45, 27);
             buttonTranslate.TabIndex = 8;
-            buttonTranslate.Text = "GPT翻译";
+            buttonTranslate.Text = "翻译";
             buttonTranslate.UseVisualStyleBackColor = true;
             buttonTranslate.Click += buttonTranslate_Click;
             // 
             // buttonShowDictForm
             // 
-            buttonShowDictForm.Location = new Point(170, 4);
+            buttonShowDictForm.Location = new Point(170, 5);
             buttonShowDictForm.Name = "buttonShowDictForm";
-            buttonShowDictForm.Size = new Size(72, 23);
+            buttonShowDictForm.Size = new Size(72, 27);
             buttonShowDictForm.TabIndex = 7;
             buttonShowDictForm.Text = "词典窗口";
             buttonShowDictForm.UseVisualStyleBackColor = true;
@@ -283,9 +285,9 @@
             // 
             // btnInputText
             // 
-            btnInputText.Location = new Point(96, 4);
+            btnInputText.Location = new Point(96, 5);
             btnInputText.Name = "btnInputText";
-            btnInputText.Size = new Size(68, 23);
+            btnInputText.Size = new Size(68, 27);
             btnInputText.TabIndex = 1;
             btnInputText.Text = "手动输入";
             btnInputText.UseVisualStyleBackColor = true;
@@ -294,7 +296,7 @@
             // checkBoxClipboardMode
             // 
             checkBoxClipboardMode.AutoSize = true;
-            checkBoxClipboardMode.Location = new Point(3, 6);
+            checkBoxClipboardMode.Location = new Point(5, 8);
             checkBoxClipboardMode.Name = "checkBoxClipboardMode";
             checkBoxClipboardMode.Size = new Size(87, 21);
             checkBoxClipboardMode.TabIndex = 0;
@@ -309,7 +311,7 @@
             ClientSize = new Size(624, 261);
             Controls.Add(panel1);
             Controls.Add(tabControl);
-            MinimumSize = new Size(560, 250);
+            MinimumSize = new Size(580, 250);
             Name = "MainForm";
             Text = "KS的日语学习工具";
             Load += MainForm_Load;
@@ -348,6 +350,6 @@
         private Button buttonUpdateExtraPrompt;
         private ComboBox comboBoxExtraPrompts;
         private CheckBox checkBoxTranslateKatakana;
-        private Button buttonGoogleTrans;
+        private ComboBox comboBoxTranslator;
     }
 }

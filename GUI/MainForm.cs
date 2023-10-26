@@ -26,11 +26,12 @@ namespace ja_learner
             {
                 sentence = value;
                 dictForm.UpdateTranslationPanelText(sentence);
-                UpdateMecabResult(RunMecab());
                 if (checkBoxAutoTranslate.Checked)
                 {
-                    TranslateSentence();
+                    _ = TranslateSentence();
                 }
+                UpdateMecabResult(RunMecab());
+
             }
         }
 
@@ -67,6 +68,7 @@ namespace ja_learner
             dictForm.Show();
             dictForm.Hide();
             UpdateExtraPromptCombobox();
+            comboBoxTranslator.SelectedIndex = 0;
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -263,9 +265,17 @@ namespace ja_learner
 
         async private Task TranslateSentence()
         {
-            var chat = GptCaller.CreateTranslateConversation(sentence);
-            ClearTranslationText();
-            GptCaller.StreamResponse(chat, res => AppendTranslationText(res));
+            if (comboBoxTranslator.SelectedIndex == 0)
+            {
+                var chat = GptCaller.CreateTranslateConversation(sentence);
+                ClearTranslationText();
+                GptCaller.StreamResponse(chat, res => AppendTranslationText(res));
+            }
+            else if (comboBoxTranslator.SelectedIndex == 1)
+            {
+                // 这个接口效果真的好烂。。。用来翻译片假名还可以，翻译句子真就生草机
+                await webView.ExecuteScriptAsync($"runGoogleTrans(\"{sentence}\")");
+            }
         }
 
         async private void buttonTranslate_Click(object sender, EventArgs e)
@@ -325,14 +335,7 @@ namespace ja_learner
 
         async private void checkBoxTranslateKatakana_CheckedChanged(object sender, EventArgs e)
         {
-
             await webView.ExecuteScriptAsync($"setTranslateKatakana({checkBoxTranslateKatakana.Checked.ToString().ToLower()})");
-        }
-
-        async private void buttonGoogleTrans_Click(object sender, EventArgs e)
-        {
-            // 这个接口效果真的好烂。。。用来翻译片假名还可以，翻译句子真就生草机
-            await webView.ExecuteScriptAsync($"runGoogleTrans(\"{sentence}\")");
         }
     }
 }
