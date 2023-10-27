@@ -26,11 +26,11 @@ namespace ja_learner
             {
                 sentence = value;
                 dictForm.UpdateTranslationPanelText(sentence);
+                UpdateMecabResult(RunMecab());
                 if (checkBoxAutoTranslate.Checked)
                 {
                     _ = TranslateSentence();
                 }
-                UpdateMecabResult(RunMecab());
 
             }
         }
@@ -58,10 +58,12 @@ namespace ja_learner
             GptCaller.Initialize();
 #if DEBUG
             webView.Source = new Uri("http://localhost:5173/"); // dev
+            Text += " - Debug -";
 #else
             // 初始化 HTTP 服务器
             HttpServer.StartServer();
             webView.Source = new Uri($"http://localhost:{HttpServer.Port}/"); // build
+            Text += $" - 已占用端口：{HttpServer.Port} -";
 #endif
 
             dictForm = new DictForm(this);
@@ -265,16 +267,21 @@ namespace ja_learner
 
         async private Task TranslateSentence()
         {
-            if (comboBoxTranslator.SelectedIndex == 0)
+            if (comboBoxTranslator.Text == "ChatGPT")
             {
                 var chat = GptCaller.CreateTranslateConversation(sentence);
                 ClearTranslationText();
                 GptCaller.StreamResponse(chat, res => AppendTranslationText(res));
             }
-            else if (comboBoxTranslator.SelectedIndex == 1)
+            else if (comboBoxTranslator.Text == "谷歌生草机")
             {
                 // 这个接口效果真的好烂。。。用来翻译片假名还可以，翻译句子真就生草机
-                await webView.ExecuteScriptAsync($"runGoogleTrans(\"{sentence}\")");
+                await webView.ExecuteScriptAsync($"runGoogleTrans(\"{sentence.Replace("\r\n", "")}\")");
+            }
+            else if(comboBoxTranslator.Text == "谷歌翻译")
+            {
+                // 效果与网页版一致的API，不知道能用多久
+                await webView.ExecuteScriptAsync($"runGoogleTransTk(\"{sentence.Replace("\r\n", "")}\")");
             }
         }
 

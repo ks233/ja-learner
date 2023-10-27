@@ -233,7 +233,7 @@
             comboBoxTranslator.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             comboBoxTranslator.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxTranslator.FormattingEnabled = true;
-            comboBoxTranslator.Items.AddRange(new object[] { "ChatGPT", "谷歌生草机" });
+            comboBoxTranslator.Items.AddRange(new object[] { "谷歌翻译", "ChatGPT", "谷歌生草机" });
             comboBoxTranslator.Location = new Point(372, 6);
             comboBoxTranslator.Name = "comboBoxTranslator";
             comboBoxTranslator.Size = new Size(86, 25);

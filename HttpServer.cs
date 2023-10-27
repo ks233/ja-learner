@@ -20,7 +20,7 @@ namespace ja_learner
             _httpListener.Prefixes.Add($"http://localhost:{port}/"); // 服务器监听的URL和端口号
 
             proxyDict["/mojiapi"] = "https://api.mojidict.com";
-            proxyDict["/googletrans_rpc"] = "https://translate.google.com";
+            proxyDict["/googletrans_api"] = "https://translate.googleapis.com";
             proxyDict["/googletrans"] = "https://clients5.google.com/translate_a";
 
             Task.Run(() =>
