@@ -20,6 +20,7 @@ namespace ja_learner
             _httpListener.Prefixes.Add($"http://localhost:{port}/"); // 服务器监听的URL和端口号
 
             proxyDict["/mojiapi"] = "https://api.mojidict.com";
+            proxyDict["/googletrans_rpc"] = "https://translate.google.com";
             proxyDict["/googletrans"] = "https://clients5.google.com/translate_a";
 
             Task.Run(() =>
@@ -86,20 +87,6 @@ namespace ja_learner
 
         private static Dictionary<string, string> proxyDict = new Dictionary<string, string>();
 
-        private static bool StartsWithProxy(string url, out string proxyName)
-        {
-            foreach(string key in proxyDict.Keys)
-            {
-                if (url.StartsWith(key))
-                {
-                    proxyName = key;
-                    return true;
-                }
-            }
-            proxyName = "";
-            return false;
-        }
-
         private static async void HandleRequest(HttpListenerContext context)
         {
             var request = context.Request;
@@ -117,8 +104,6 @@ namespace ja_learner
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    // string apiUrl = url.Replace("/mojiapi", "https://api.mojidict.com");
-
                     HttpResponseMessage r;
                     string apiUrl = url.Replace(proxyName, proxyDict[proxyName]);
                     if (request.HttpMethod == "GET")
@@ -134,6 +119,18 @@ namespace ja_learner
                         }
                         httpClient.DefaultRequestHeaders.Clear();
                         HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                        content.Headers.Clear();
+                        // 将HttpListenerRequest的头信息复制到HttpContent的头信息
+                        foreach (string headerName in request.Headers.AllKeys)
+                        {
+                            // 根据需要自定义头信息的处理
+                            string headerValue = request.Headers[headerName];
+                            if (!string.IsNullOrEmpty(headerValue))
+                            {
+                                content.Headers.TryAddWithoutValidation(headerName, headerValue);
+                            }
+                        }
+
                         r = await httpClient.PostAsync(apiUrl, content);
                     }
                     // 将代理请求的响应返回给客户端
