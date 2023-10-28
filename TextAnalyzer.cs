@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -53,12 +54,34 @@ namespace ja_learner
                 if (node.CharType > 0)
                 {
                     TextAnalyzerResult result = new TextAnalyzerResult();
-                    var features = node.Feature.Split(',');
-                    // features[0] 是词性，[6] 是原型，[7] 是发音（如果有的话）
+                    // unidic里有些词的解析结果会有双引号，双引号里面有逗号，导致Split错位，所以先把双引号中间清空再Split
+                    var features = Regex.Replace(node.Feature, "\"[^\"]*\"", "").Split(','); 
+
+                    //MessageBox.Show(node.Feature);
+                    // 这个mecab库好像没办法用dicrc自定义输出格式，dicrc只对个别属性生效
+                    // 那只能用数组长度来判断了，如果很长说明是unidic，否则就是ipadic（默认词典）
                     result.Surface = node.Surface;
-                    result.Pos = features[0];
-                    result.Basic = features[6];
-                    result.Reading = features.Length > 7 ? features[7] : "";
+                    if (features.Length > 16) {
+                        // unidic
+                        result.Pos = features[0];
+                        result.Basic = features[8];
+                        result.Reading = features[20];
+                        if (result.Reading == "*")
+                        {
+                            result.Reading = "";
+                        }
+                        if(Regex.IsMatch(result.Surface, @"^[a-zA-Z0-9]+$"))
+                        {
+                            result.Reading = "";
+                        }
+                    }
+                    else if(features.Length > 6) 
+                    {
+                        // ipadic
+                        result.Pos = features[0];
+                        result.Basic = features[6];
+                        result.Reading = features.Length > 7 ? features[7] : "";
+                    }
                     results.Add(result);
                 }
             }
