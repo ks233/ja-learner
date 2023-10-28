@@ -105,7 +105,7 @@ namespace ja_learner
                 using (HttpClient httpClient = new HttpClient())
                 {
                     HttpResponseMessage r;
-                    string apiUrl = url.Replace(proxyName, proxyDict[proxyName]);
+                    string apiUrl = request.Url.PathAndQuery.Replace(proxyName, proxyDict[proxyName]);
                     if (request.HttpMethod == "GET")
                     {
                         r = await httpClient.GetAsync(request.RawUrl.Replace(proxyName, proxyDict[proxyName]));
@@ -118,6 +118,7 @@ namespace ja_learner
                             json = reader.ReadToEnd();
                         }
                         httpClient.DefaultRequestHeaders.Clear();
+                        // httpClient.DefaultRequestHeaders.Host = proxyDict[proxyName].Replace("https://", "");
                         HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
                         content.Headers.Clear();
                         // 将HttpListenerRequest的头信息复制到HttpContent的头信息
