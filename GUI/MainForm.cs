@@ -84,6 +84,8 @@ namespace ja_learner
         {
             string message = e.TryGetWebMessageAsString();
             dictForm.SearchText(message);
+            dictForm.ShowAndFocus();
+            Focus();
         }
 
         private string RunMecab()
@@ -232,10 +234,7 @@ namespace ja_learner
         {
             if (!dictForm.Visible)
             {
-                dictForm.Show();
-                dictForm.WindowState = FormWindowState.Normal; // 从最小化状态到普通状态
-                dictForm.BringToFront();
-                dictForm.Activate();
+                dictForm.ShowAndFocus();
             }
             else
             {

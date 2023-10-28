@@ -57,6 +57,14 @@ namespace ja_learner
             }
         }
 
+        public void ShowAndFocus()
+        {
+            Show();
+            WindowState = FormWindowState.Normal; // 从最小化状态到普通状态
+            BringToFront();
+            Activate();
+        }
+
         private async void DictForm_Load(object sender, EventArgs e)
         {
             await InitializeWebView();
