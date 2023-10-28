@@ -62,7 +62,7 @@
             buttonInterpret.Name = "buttonInterpret";
             buttonInterpret.Size = new Size(545, 23);
             buttonInterpret.TabIndex = 3;
-            buttonInterpret.Text = "解释";
+            buttonInterpret.Text = "分析";
             buttonInterpret.UseVisualStyleBackColor = true;
             buttonInterpret.Click += buttonInterpret_Click;
             // 

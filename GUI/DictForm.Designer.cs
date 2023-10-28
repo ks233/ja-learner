@@ -81,7 +81,7 @@
             tabPageGpt.Padding = new Padding(3);
             tabPageGpt.Size = new Size(416, 431);
             tabPageGpt.TabIndex = 1;
-            tabPageGpt.Text = "内容解析";
+            tabPageGpt.Text = "ChatGPT";
             tabPageGpt.UseVisualStyleBackColor = true;
             // 
             // translationPanel

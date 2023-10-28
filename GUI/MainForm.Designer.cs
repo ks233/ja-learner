@@ -182,7 +182,7 @@
             tabPageText.Padding = new Padding(3);
             tabPageText.Size = new Size(616, 199);
             tabPageText.TabIndex = 1;
-            tabPageText.Text = "分词断句";
+            tabPageText.Text = "语句分析";
             tabPageText.UseVisualStyleBackColor = true;
             // 
             // webView
