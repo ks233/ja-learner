@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-	<MeCabUseDefaultDictionary >False</MeCabUseDefaultDictionary >
+	<MeCabUseDefaultDictionary>False</MeCabUseDefaultDictionary>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
 
   <ItemGroup>
     <None Update="config.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="extra_prompt.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

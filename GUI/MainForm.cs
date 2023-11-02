@@ -277,7 +277,7 @@ namespace ja_learner
                 // 这个接口效果真的好烂。。。用来翻译片假名还可以，翻译句子真就生草机
                 await webView.ExecuteScriptAsync($"runGoogleTrans(\"{sentence.Replace("\r\n", "")}\")");
             }
-            else if(comboBoxTranslator.Text == "谷歌翻译")
+            else if (comboBoxTranslator.Text == "谷歌翻译")
             {
                 // 效果与网页版一致的API，不知道能用多久
                 await webView.ExecuteScriptAsync($"runGoogleTransTk(\"{sentence.Replace("\r\n", "")}\")");
