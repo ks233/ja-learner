@@ -81,6 +81,6 @@ https://api.openai.com/{0}/{1}
   - 单词搜索：[MOJi 辞書](https://www.mojidict.com/)
   - Webview 页面：Vite + Vue，这部分在另一个项目中，目前暂未开源。
 
-### 下载 & bug 反馈
+## 下载 & bug 反馈
 
 在 [Releases](https://github.com/ks233/ja-learner/releases) 可以下载到软件的最新版本，另外欢迎在 [Issues](https://github.com/ks233/ja-learner/issues) 反馈 bug，如果觉得好用可以考虑给个 star，谢啦。
