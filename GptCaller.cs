@@ -49,7 +49,7 @@ namespace ja_learner
 
         private static void AddExtraSystemPrompt(Conversation conversation)
         {
-            if (UserConfig.extraPrompt.Length > 0)
+            if (UserConfig.ExtraPrompt.Length > 0)
             {
                 conversation.AppendSystemMessage(UserConfig.extraPrompt);
             }
