@@ -2,7 +2,7 @@
 <div align="center">
     <strong>📖 简易日语学习 / 视觉小说阅读辅助工具</strong>
     <br />
-    <span>句子拆解 • 汉字注音 • 快速查词 • 参考翻译 • 外来语标注 • AI讲解</span>
+    <span>句子拆解 • 汉字注音 • 一键查词 • 参考翻译 • 外来语标注 • AI讲解</span>
 </div> 
 <h3 align="center">
     <a href="https://github.com/ks233/ja-learner/releases">下载</a><span> • </span><a href="https://github.com/ks233/ja-learner/issues">Bug 反馈</a>
@@ -17,7 +17,7 @@
 ## 功能介绍
 
 * **语句分析**：用不同样式区分句子成分，为句子中的汉字注音
-* **单词查询**：点击单词快速查询 MOJi 辞書，无需繁琐的输入与切换窗口
+* **单词查询**：点击单词一键查询 MOJi 辞書，哪里不会点哪里
 * **参考翻译**：支持谷歌翻译与 ChatGPT 翻译，把握句子整体含义
 * **片假不留**：在片假名上方显示英语翻译，满屏片假名也不怕
 * **游戏文本分析**：吸附并跟随游戏窗口，配合文本提取工具，实时分析游戏文本
