@@ -1,18 +1,27 @@
-# ja-learner
+<h1 align="center">KS 的日语学习工具 v0.2</h3>
+<div align="center">
+    <strong>📖 简易日语学习 / 视觉小说阅读辅助工具</strong>
+    <br />
+    <strong>句子拆解 • 汉字注音 • 外来语翻译 • 快速查词 • 参考翻译 • AI 分析</strong>
+</div> 
 
-![title](README/title.png)
 
-## 介绍
+<h3 align="center">
+    <a href="https://github.com/ks233/ja-learner/releases">下载</a><span> • </span><a href="https://github.com/ks233/ja-learner/issues">Bug 反馈</a>
+</h3>
 
-这是一款简单实用的日语学习 / 视觉小说阅读辅助工具，提供了句子拆解、汉字注音、外来语标注、快速查词、参考翻译、ChatGPT 分析等功能，降低日文阅读障碍。
+<div align="center">
+    <a href="https://github.com/ks233/ja-learner">
+        <img src="README/title.png" alt="Title" >
+    </a>
+</div>
 
-### 特性
-
-- 使用不同颜色显示不同的句子成分，在汉字上方标注读音，在外来语上方标注英语，使句子更加清晰易读。
+- 用不同颜色区分句子成分，在汉字上方标注读音，在外来语上方标注英语，使句子更加清晰易读。
 - 点击单词快速查询 MOJi 辞書，哪里不会点哪里。
-- 支持谷歌与 ChatGPT 参考翻译。
-- 调用 ChatGPT 解说句子中的单词和语法成分。
+- 支持谷歌与 ChatGPT 参考翻译（ChatGPT 需要 API key）。
+- 调用 ChatGPT 讲解句子中的单词和语法成分。
 - 吸附窗口、读取剪贴板实时更新文本，配合游戏文本提取工具，把视觉小说变成日语课本。
+
 
 ## 使用说明
 
@@ -72,17 +81,13 @@ https://api.openai.com/{0}/{1}
 
 根据我个人的使用体验，整体准确率还可以接受，但还是不建议完全初学者使用，以免被误导。如果遇到可疑的注音或翻译，建议点击单词查看 MOJi 辞書的解释和注音，并对照不同引擎的翻译结果，或者使用 ChatGPT 的解说功能。
 
-### 相关项目与第三方库
+### 相关项目 & 第三方库
 
 - 开坑的想法主要来源于 [YUKI 翻译器](https://github.com/project-yuki/YUKI) 和 [Translation-Aggregator](https://github.com/Translation-Aggregator/Translation-Aggregator)，前者支持了丰富的翻译接口，内置了文本提取功能，但使用起来比较复杂，且缺少快速查词的功能；后者虽然可以鼠标悬停查词，但只有日英词典、界面比较古老，而且翻译接口几乎炸完了，于是我决定搓一个更简单、更符合自己需求的工具。
 - 在开发过程中，[taishi-i/awesome-japanese-nlp-resources](https://github.com/taishi-i/awesome-japanese-nlp-resources) 中丰富的日语相关资料对我帮助很大。
 - 相关功能实现：
-  - 形态分析与注音： [kekyo/MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)
+  - 形态分析：[taku910/mecab](https://github.com/taku910/mecab) 的 .Net 移植版本 [kekyo/MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)
   - 调用 ChatGPT：[OkGoDoIt/OpenAI-API-dotnet](https://github.com/OkGoDoIt/OpenAI-API-dotnet)
   - 谷歌翻译：参考了 [FilipePS/Traduzir-paginas-web](https://github.com/FilipePS/Traduzir-paginas-web) 的 API 调用方式。
   - 单词搜索：[MOJi 辞書](https://www.mojidict.com/)
   - Webview 页面：Vite + Vue，这部分在另一个项目中，目前暂未开源。
-
-## 下载 & bug 反馈
-
-在 [Releases](https://github.com/ks233/ja-learner/releases) 可以下载到软件的最新版本，另外欢迎在 [Issues](https://github.com/ks233/ja-learner/issues) 反馈 bug，如果觉得好用可以考虑给个 star，谢啦。
