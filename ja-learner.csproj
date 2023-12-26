@@ -6,6 +6,8 @@
     <RootNamespace>ja_learner</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
 	<MeCabUseDefaultDictionary>False</MeCabUseDefaultDictionary>
