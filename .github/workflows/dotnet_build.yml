@@ -10,9 +10,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Specify a Windows runner
 
     steps:
+      - name: Set system locale to UTF-8
+        run: chcp 65001
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -24,20 +27,37 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build and Test
-        run: dotnet build --configuration Release --no-restore
-        
-      - name: Publish win-x64
-        run: dotnet publish ja-learner.csproj -c Release -r win7-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true -p:PublishReadyToRun=false
+      - name: Clone and build Vue.js project
+        run: |
+          git clone https://github.com/ks233/ja-learner-webview
+          cd ja-learner-webview
+          npm install
+          npm run build
+          mkdir -p ../ja-learner/dist_vue
+          mv dist ../ja-learner/dist_vue
+
+
+      - name: Build C# project for Windows
+        run: dotnet build ja-learner.sln -c Release --no-restore
+
+      #- name: Test C# project
+      #  run: dotnet test --no-build --verbosity normal
+
+      - name: Move Vue.js dist to C# project
+        run: mv ja-learner/dist_vue/dist ./bin/Release/net6.0-windows/
+
+      - name: Download static files from repo
+        run: |
+          git clone https://github.com/ly-nld/ja-learner-static-files
+          mv ja-learner-static-files/* ./bin/Release/net6.0-windows/
+          mkdir ./bin/Release/net6.0-window/extra_prompts
 
       - name: Create win client archive
-        run: |
-          cd ./bin/Release/net6.0-windows/win7-x64/publish/
-          zip -r client-win-x64.zip *
+        run: Compress-Archive -Path ./bin/Release/net6.0-windows/* -DestinationPath client-win-x64.zip
 
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y/%m/%d')"
+        run: echo "::set-output name=date::$(date +'%Y年%m月%d日%H%M%S')"
 
       - name: Create Release
         id: create_release
@@ -57,6 +77,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/Release/net6.0-windows/win7-x64/publish/client-win-x64.zip
-          asset_name: client-win-x64.zip
+          asset_path: ./client-win-x64.zip
+          asset_name: ja-learner.zip
           asset_content_type: application/zip
