@@ -54,7 +54,6 @@ namespace ja_learner
         {
             // 初始化 webview
             await InitializeWebView();
-            UserConfig.ReadConfigFile();
             GptCaller.Initialize();
 #if DEBUG
             webView.Source = new Uri("http://localhost:5173/"); // dev
@@ -297,7 +296,7 @@ namespace ja_learner
         private void buttonUpdateExtraPrompt_Click(object sender, EventArgs e)
         {
             UserConfig.UpdateExtraPrompt();
-            MessageBox.Show($"已重新读取文件{UserConfig.ExtraPromptFilename}:\n" + UserConfig.extraPrompt);
+            MessageBox.Show($"已重新读取文件{UserConfig.ExtraPromptFilename}:\n" + UserConfig.ExtraPrompt);
         }
 
         private void checkBoxUseExtraPrompt_CheckedChanged(object sender, EventArgs e)

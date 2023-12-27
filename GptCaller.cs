@@ -12,15 +12,9 @@ namespace ja_learner
     {
         private static OpenAIAPI api;
 
-        public static void Initialize() {
-            SetConfig(UserConfig.apiKey, UserConfig.apiUrl);
-        }
-
-        public static void SetConfig(string api_key, string api_url)
+        public static void Initialize()
         {
-
-            api = new OpenAIAPI(api_key);
-            api.ApiUrlFormat = api_url;
+            api = new(Program.APP_SETTING.ApiKey) { ApiUrlFormat = Program.APP_SETTING.ApiUrl };
         }
 
         public static Conversation CreateTranslateConversation(string text)
@@ -39,7 +33,7 @@ namespace ja_learner
         {
             Conversation conversation = api.Chat.CreateConversation();
             conversation.AppendSystemMessage("You are a Japanese teacher, List and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
-            if(UserConfig.useExtraPrompt)
+            if (UserConfig.useExtraPrompt)
             {
                 AddExtraSystemPrompt(conversation);
             }
@@ -51,7 +45,7 @@ namespace ja_learner
         {
             if (UserConfig.ExtraPrompt.Length > 0)
             {
-                conversation.AppendSystemMessage(UserConfig.extraPrompt);
+                conversation.AppendSystemMessage(UserConfig.ExtraPrompt);
             }
         }
 
