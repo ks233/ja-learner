@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="MeCab.DotNet" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1774.30" />
     <PackageReference Include="OpenAI" Version="1.7.2" />
   </ItemGroup>
@@ -42,6 +43,8 @@
     <None Update="extra_prompts\extra_prompt.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-
 </Project>
