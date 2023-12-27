@@ -1,4 +1,4 @@
-<h1 align="center">KS的日语学习工具 v0.2</h3>
+<h1 align="center">KS的日语学习工具 v0.2</h1>
 <div align="center">
     <strong>📖 简易日语学习 / 视觉小说阅读辅助工具</strong>
     <br />
@@ -67,7 +67,7 @@ sk-xxxxxxxxx
 https://api.openai.com/{0}/{1}
 ```
 
-如果你使用第三方反代，就要将第二行修改为相应的域名。
+如果你使用官方 API，第二行就不用修改，如果使用第三方反代，就要修改为相应的域名。
 
 配置好 api key 就可以使用 GPT 翻译和解说文本了。
 
@@ -77,21 +77,26 @@ https://api.openai.com/{0}/{1}
 
 ### 分析与翻译仅供参考
 
-本项目的分词与注音功能基于形态分析器 MeCab，MeCab 有时会犯一些低级错误，比如把「身体（からだ）」注音为「しんたい」、把「二人（ふたり）」注音为「ににん」，用词汇更丰富的 [UniDic](https://clrd.ninjal.ac.jp/unidic/) 词典替换 `dic` 文件夹中默认的 IPADIC 效果会稍好一些。
+本项目的分词与注音功能基于 MeCab，有时会犯一些低级错误，比如把「<ruby>身体<rt>からだ</rt></ruby>」注音为 しんたい、把「<ruby>二人<rt>ふたり</rt></ruby>」注音为 ににん，用词汇更丰富的 [UniDic](https://clrd.ninjal.ac.jp/unidic/) 词典替换 `dic` 文件夹中默认的 IPADIC 效果会稍好一些。
 
-至于翻译，机翻懂的都懂。谷歌翻译遇到复杂的句式和不规范的表达就容易翻车，ChatGPT 比谷歌懂更多俗语、流行语，但偶尔也会发癫，比如使用简体中文以外的语言回复、唐突的[塞氏翻译法](https://zh.moegirl.org.cn/zh-hans/塞氏翻译法)等等。建议把本软件当做一个精读工具而不是翻译器，把注意力放在日语原文上，只在不确定的时候使用翻译作为参考。
+翻译毕竟都是机翻，出错也很正常。谷歌翻译遇到复杂的句式和不规范的表达就容易翻车，ChatGPT 比谷歌懂更多俗语、流行语，但偶尔也会发癫，比如使用简体中文以外的语言回复、唐突的[塞氏翻译法](https://zh.moegirl.org.cn/zh-hans/塞氏翻译法)等等。建议把本软件当做一个精读工具而不是翻译器，把注意力放在日语原文上，只在不确定的时候使用翻译作为参考。
 
 外来语标注功能使用谷歌翻译将片假名单词翻译为英语，但不是所有片假名单词都是外来语，外来语也不一定来源于英语，还有像 supplies 和 surprise 这样的“同音词”也不好区分，因此也会出现标记错误的情况。
 
 根据我个人的使用体验，整体准确率还可以接受，但还是不建议完全初学者使用，以免被误导。如果遇到可疑的注音或翻译，建议点击单词查看 MOJi 辞書的解释和注音，并对照不同引擎的翻译结果，或者使用 ChatGPT 的解说功能。
 
-### 相关项目 & 第三方库
+### 相关项目
 
-* 开坑的想法主要来源于 [YUKI 翻译器](https://github.com/project-yuki/YUKI) 和 [Translation-Aggregator](https://github.com/Translation-Aggregator/Translation-Aggregator)，前者支持了丰富的翻译接口，内置了文本提取功能，但使用起来比较复杂，且缺少快速查词的功能；后者虽然可以鼠标悬停查词，但只有日英词典、界面比较古老，而且翻译接口几乎炸完了，于是我决定搓一个更简单、更符合自己需求的工具。
-* 在开发过程中，[taishi-i/awesome-japanese-nlp-resources](https://github.com/taishi-i/awesome-japanese-nlp-resources) 中丰富的日语相关资料对我帮助很大。
-* 相关功能实现：
-  * 形态分析：[taku910/mecab](https://github.com/taku910/mecab) 的 .Net 移植版本 [kekyo/MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)
-  * 调用 ChatGPT：[OkGoDoIt/OpenAI-API-dotnet](https://github.com/OkGoDoIt/OpenAI-API-dotnet)
-  * 谷歌翻译：参考了 [FilipePS/Traduzir-paginas-web](https://github.com/FilipePS/Traduzir-paginas-web) 的 API 调用方式
-  * 单词搜索：[MOJi 辞書](https://www.mojidict.com/)
-  * Webview 页面：Vite + Vue，这部分在另一个项目中，目前暂未开源
+本项目的前端页面：[ks233/ja-learner-webview](https://github.com/ks233/ja-learner-webview)
+
+开坑的想法主要来源于 [YUKI 翻译器](https://github.com/project-yuki/YUKI) 和 [Translation-Aggregator](https://github.com/Translation-Aggregator/Translation-Aggregator)，前者支持了丰富的翻译接口，内置了文本提取功能，但使用起来比较复杂，且缺少快速查词的功能；后者虽然可以鼠标悬停查词，但只有日英词典、界面比较古老，而且翻译接口几乎炸完了，于是我决定搓一个更简单、更符合自己需求的工具。
+
+[taishi-i/awesome-japanese-nlp-resources](https://github.com/taishi-i/awesome-japanese-nlp-resources) 有非常多日语相关的工具和资源，对我开发这个项目帮助很大。
+
+### 使用的第三方库与框架
+
+* 形态分析：[taku910/mecab](https://github.com/taku910/mecab) 的 .Net 移植版本 [kekyo/MeCab.DotNet](https://github.com/kekyo/MeCab.DotNet)
+* 调用 ChatGPT：[OkGoDoIt/OpenAI-API-dotnet](https://github.com/OkGoDoIt/OpenAI-API-dotnet)
+* 谷歌翻译：参考了 [FilipePS/Traduzir-paginas-web](https://github.com/FilipePS/Traduzir-paginas-web) 的 API 调用方式
+* 单词搜索：[MOJi 辞書](https://www.mojidict.com/)
+* Webview 页面：Vite + Vue
