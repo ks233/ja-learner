@@ -45,7 +45,7 @@ namespace ja_learner
         {
             if (UserConfig.ExtraPrompt.Length > 0)
             {
-                conversation.AppendSystemMessage(UserConfig.extraPrompt);
+                conversation.AppendSystemMessage(UserConfig.ExtraPrompt);
             }
         }
 
