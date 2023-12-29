@@ -10,11 +10,9 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Specify a Windows runner
+    runs-on: windows-latest
 
     steps:
-      - name: Set system locale to UTF-8
-        run: chcp 65001
 
       - name: Checkout Repository
         uses: actions/checkout@v2
