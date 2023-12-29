@@ -1,4 +1,4 @@
-using Microsoft.Web.WebView2.Core;
+ï»¿using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using MeCab;
@@ -44,25 +44,25 @@ namespace ja_learner
             await webView.EnsureCoreWebView2Async(null);
             webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
             webView.CoreWebView2.Profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Light;
-            // ´¦Àí´ò¿ªĞÂ´°¿Ú£¨ÓÃÄ¬ÈÏä¯ÀÀÆ÷´ò¿ª£©
+            // å¤„ç†æ‰“å¼€æ–°çª—å£ï¼ˆç”¨é»˜è®¤æµè§ˆå™¨æ‰“å¼€ï¼‰
             webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
-            // ½ÓÊÕjsÏûÏ¢£¨²é´Êµä£©
+            // æ¥æ”¶jsæ¶ˆæ¯ï¼ˆæŸ¥è¯å…¸ï¼‰
             webView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
-            // ³õÊ¼»¯ webview
+            // åˆå§‹åŒ– webview
             await InitializeWebView();
             GptCaller.Initialize();
 #if DEBUG
             webView.Source = new Uri("http://localhost:5173/"); // dev
             Text += " - Debug -";
 #else
-            // ³õÊ¼»¯ HTTP ·şÎñÆ÷
+            // åˆå§‹åŒ– HTTP æœåŠ¡å™¨
             HttpServer.StartServer();
             webView.Source = new Uri($"http://localhost:{HttpServer.Port}/"); // build
-            Text += $" - ÒÑÕ¼ÓÃ¶Ë¿Ú£º{HttpServer.Port} -";
+            Text += $" - å·²å ç”¨ç«¯å£ï¼š{HttpServer.Port} -";
 #endif
 
             dictForm = new DictForm(this);
@@ -74,9 +74,9 @@ namespace ja_learner
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
         {
-            e.Handled = true; // ·ÀÖ¹WebView2´ò¿ªĞÂ´°¿Ú
+            e.Handled = true; // é˜²æ­¢WebView2æ‰“å¼€æ–°çª—å£
 
-            // Ê¹ÓÃÄ¬ÈÏä¯ÀÀÆ÷´ò¿ªÁ´½Ó
+            // ä½¿ç”¨é»˜è®¤æµè§ˆå™¨æ‰“å¼€é“¾æ¥
             Process.Start(new ProcessStartInfo(e.Uri) { UseShellExecute = true });
         }
         private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
@@ -120,9 +120,9 @@ namespace ja_learner
         }
 
 
-        private System.Drawing.Point locationBefore; // ¼ÇÂ¼ÆÕÍ¨Ä£Ê½ÏÂ´°¿ÚµÄÎ»ÖÃ
-        private Size sizeBefore; // ¼ÇÂ¼ÆÕÍ¨Ä£Ê½ÏÂ´°¿ÚµÄ´óĞ¡
-        private int heightAfter = 200; // ¸½×ÅÄ£Ê½Ê±£¬´°ÌåÍ¨³£»á±È½Ï°«
+        private System.Drawing.Point locationBefore; // è®°å½•æ™®é€šæ¨¡å¼ä¸‹çª—å£çš„ä½ç½®
+        private Size sizeBefore; // è®°å½•æ™®é€šæ¨¡å¼ä¸‹çª—å£çš„å¤§å°
+        private int heightAfter = 200; // é™„ç€æ¨¡å¼æ—¶ï¼Œçª—ä½“é€šå¸¸ä¼šæ¯”è¾ƒçŸ®
 
         private void checkBoxWindowAttach_CheckedChanged(object sender, EventArgs e)
         {
@@ -130,7 +130,7 @@ namespace ja_learner
 
             if (checkBoxWindowAttach.Checked)
             {
-                // ¼ÇÂ¼ÆÕÍ¨×´Ì¬µÄ´°¿ÚÎ»ÖÃ£¬ÇĞ»»µ½Îü¸½×´Ì¬ÏÂµÄ´°¿ÚÎ»ÖÃ
+                // è®°å½•æ™®é€šçŠ¶æ€çš„çª—å£ä½ç½®ï¼Œåˆ‡æ¢åˆ°å¸é™„çŠ¶æ€ä¸‹çš„çª—å£ä½ç½®
                 sizeBefore = this.Size;
                 locationBefore = this.Location;
                 this.Height = heightAfter;
@@ -179,7 +179,7 @@ namespace ja_learner
         }
         private void timerGetClipboard_Tick(object sender, EventArgs e)
         {
-            string newSentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim().Replace("¡¡", "");
+            string newSentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim().Replace("ã€€", "");
             if (newSentence != "" && newSentence != Sentence)
             {
                 Sentence = newSentence;
@@ -201,7 +201,7 @@ namespace ja_learner
 
         private void btnInputText_Click(object sender, EventArgs e)
         {
-            Sentence = Microsoft.VisualBasic.Interaction.InputBox("ÊÖ¶¯ÊäÈë", "ÊäÈë¾ä×Ó", "", 0, 0);
+            Sentence = Microsoft.VisualBasic.Interaction.InputBox("æ‰‹åŠ¨è¾“å…¥", "è¾“å…¥å¥å­", "", 0, 0);
         }
 
         private void timerSelectWindow_Tick(object sender, EventArgs e)
@@ -209,7 +209,7 @@ namespace ja_learner
             IntPtr hwnd = WindowAttacher.GetHwndByCursorPoint();
             textBoxHwnd.Text = hwnd.ToString();
 
-            // ÅĞ¶ÏÊó±êÊÇ·ñ°´ÏÂ
+            // åˆ¤æ–­é¼ æ ‡æ˜¯å¦æŒ‰ä¸‹
             bool mouseDown = WindowAttacher.MouseDown(MouseButtons.Left);
 
             if (mouseDown)
@@ -248,8 +248,8 @@ namespace ja_learner
             {
                 IntPtr hwnd = IntPtr.Parse(textBoxHwnd.Text);
                 string windowTitle = WindowAttacher.GetWindowTitle(hwnd);
-                checkBoxWindowAttach.Text = $"Óë¡¾{windowTitle}¡¿¶ÔÆë";
-                // ÅĞ¶Ï´°¿Ú¾ä±úÊÇ²»ÊÇ×Ô¼ºµÄ
+                checkBoxWindowAttach.Text = $"ä¸ã€{windowTitle}ã€‘å¯¹é½";
+                // åˆ¤æ–­çª—å£å¥æŸ„æ˜¯ä¸æ˜¯è‡ªå·±çš„
                 if (hwnd == this.Handle || hwnd == dictForm.Handle)
                 {
                     checkBoxWindowAttach.Enabled = false;
@@ -271,14 +271,14 @@ namespace ja_learner
                 ClearTranslationText();
                 GptCaller.StreamResponse(chat, res => AppendTranslationText(res));
             }
-            else if (comboBoxTranslator.Text == "¹È¸èÉú²İ»ú")
+            else if (comboBoxTranslator.Text == "è°·æ­Œç”Ÿè‰æœº")
             {
-                // Õâ¸ö½Ó¿ÚĞ§¹ûÕæµÄºÃÀÃ¡£¡£¡£ÓÃÀ´·­ÒëÆ¬¼ÙÃû»¹¿ÉÒÔ£¬·­Òë¾ä×ÓÕæ¾ÍÉú²İ»ú
+                // è¿™ä¸ªæ¥å£æ•ˆæœçœŸçš„å¥½çƒ‚ã€‚ã€‚ã€‚ç”¨æ¥ç¿»è¯‘ç‰‡å‡åè¿˜å¯ä»¥ï¼Œç¿»è¯‘å¥å­çœŸå°±ç”Ÿè‰æœº
                 await webView.ExecuteScriptAsync($"runGoogleTrans(\"{sentence.Replace("\r\n", "")}\")");
             }
-            else if (comboBoxTranslator.Text == "¹È¸è·­Òë")
+            else if (comboBoxTranslator.Text == "è°·æ­Œç¿»è¯‘")
             {
-                // Ğ§¹ûÓëÍøÒ³°æÒ»ÖÂµÄAPI£¬²»ÖªµÀÄÜÓÃ¶à¾Ã
+                // æ•ˆæœä¸ç½‘é¡µç‰ˆä¸€è‡´çš„APIï¼Œä¸çŸ¥é“èƒ½ç”¨å¤šä¹…
                 await webView.ExecuteScriptAsync($"runGoogleTransTk(\"{sentence.Replace("\r\n", "")}\")");
             }
         }
@@ -296,7 +296,7 @@ namespace ja_learner
         private void buttonUpdateExtraPrompt_Click(object sender, EventArgs e)
         {
             UserConfig.UpdateExtraPrompt();
-            MessageBox.Show($"ÒÑÖØĞÂ¶ÁÈ¡ÎÄ¼ş{UserConfig.ExtraPromptFilename}:\n" + UserConfig.ExtraPrompt);
+            MessageBox.Show($"å·²é‡æ–°è¯»å–æ–‡ä»¶{UserConfig.ExtraPromptFilename}:\n" + UserConfig.ExtraPrompt);
         }
 
         private void checkBoxUseExtraPrompt_CheckedChanged(object sender, EventArgs e)
