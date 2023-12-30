@@ -44,11 +44,8 @@ jobs:
       - name: Move Vue.js dist to C# project
         run: mv ja-learner/dist_vue/dist ./bin/Release/net6.0-windows/
 
-      - name: Download static files from repo
-        run: |
-          git clone https://github.com/ly-nld/ja-learner-static-files
-          mv ja-learner-static-files/* ./bin/Release/net6.0-windows/
-          mkdir ./bin/Release/net6.0-window/extra_prompts
+      - name: Create extra_prompts folder
+        run: ./bin/Release/net6.0-window/extra_prompts
 
       - name: Create win client archive
         run: Compress-Archive -Path ./bin/Release/net6.0-windows/* -DestinationPath client-win-x64.zip

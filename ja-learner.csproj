@@ -10,7 +10,7 @@
     <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
-	<MeCabUseDefaultDictionary>False</MeCabUseDefaultDictionary>
+	<MeCabUseDefaultDictionary>True</MeCabUseDefaultDictionary>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,12 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="config.txt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="extra_prompt.txt">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
     <None Update="extra_prompts\extra_prompt.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
