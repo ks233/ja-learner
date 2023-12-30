@@ -48,7 +48,9 @@ jobs:
         run: mkdir ./bin/Release/net6.0-window/extra_prompts
 
       - name: Create win client archive
-        run: Compress-Archive -Path ./bin/Release/net6.0-windows/* -DestinationPath client-win-x64.zip
+        run: |
+          ren ".\bin\Release\net6.0-windows" "ja-learner"
+          Compress-Archive -Path ./bin/Release/ja-learner -DestinationPath client-win-x64.zip -Force
 
       - name: Get current date
         id: date
