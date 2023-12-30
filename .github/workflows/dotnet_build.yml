@@ -45,7 +45,7 @@ jobs:
         run: mv ja-learner/dist_vue/dist ./bin/Release/net6.0-windows/
 
       - name: Create extra_prompts folder
-        run: ./bin/Release/net6.0-window/extra_prompts
+        run: mkdir ./bin/Release/net6.0-window/extra_prompts
 
       - name: Create win client archive
         run: Compress-Archive -Path ./bin/Release/net6.0-windows/* -DestinationPath client-win-x64.zip
