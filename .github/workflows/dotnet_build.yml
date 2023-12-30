@@ -45,12 +45,12 @@ jobs:
         run: mv ja-learner/dist_vue/dist ./bin/Release/net6.0-windows/
 
       - name: Create extra_prompts folder
-        run: mkdir ./bin/Release/net6.0-window/extra_prompts
+        run: mkdir ./bin/Release/net6.0-windows/extra_prompts
 
       - name: Create win client archive
         run: |
           ren ".\bin\Release\net6.0-windows" "ja-learner"
-          Compress-Archive -Path ./bin/Release/ja-learner -DestinationPath client-win-x64.zip -Force
+          Compress-Archive -Path ./bin/Release/ja-learner -DestinationPath client-win-x64.zip
 
       - name: Get current date
         id: date
