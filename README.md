@@ -108,6 +108,7 @@
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://ks233.github.io/"><img src="https://avatars.githubusercontent.com/u/38981529?v=4?s=100" width="100px;" alt="ks233"/><br /><sub><b>ks233</b></sub></a><br /><a href="#code-ks233" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/shaka0919"><img src="https://avatars.githubusercontent.com/u/17539962?v=4?s=100" width="100px;" alt="Harvey Wang"/><br /><sub><b>Harvey Wang</b></sub></a><br /><a href="#code-shaka0919" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
