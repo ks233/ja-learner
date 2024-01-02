@@ -29,7 +29,7 @@ namespace ja_learner
 
         public MainForm()
         {
-            InitializeComponent();
+            InitializeComponent()
         }
         private async Task InitializeWebView()
         {
