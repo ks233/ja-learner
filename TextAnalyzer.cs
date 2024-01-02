@@ -16,7 +16,7 @@ namespace ja_learner
         public string Surface;
         public string Pos;// 词性
         public string Basic;// 基本型
-        public string Reading;// 渲染
+        public string Reading;// 读音
         public readonly string ToJson()
         {
 

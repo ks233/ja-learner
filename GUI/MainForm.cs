@@ -1,13 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using MeCab;
-using System.Text;
-using System.Reflection.Metadata;
-using OpenAI_API.Chat;
 using Microsoft.VisualBasic;
-using System.Windows.Forms.Design;
-using System.Net.Http;
 
 namespace ja_learner
 {
@@ -16,7 +9,6 @@ namespace ja_learner
         DictForm dictForm;
 
         TextAnalyzer textAnalyzer = new TextAnalyzer();
-        GptCaller gptCaller;
         private string sentence = "";
 
         public string Sentence
@@ -111,16 +103,16 @@ namespace ja_learner
         {
             if (timerWindowAttach.Enabled)
             {
-                heightAfter = this.Height;
+                heightAfter = Height;
                 if (dictForm.Visible)
                 {
-                    dictForm.Width = this.Right - WindowAttacher.TargetWindowRect.Right;
+                    dictForm.Width = Right - WindowAttacher.TargetWindowRect.Right;
                 }
             }
         }
 
 
-        private System.Drawing.Point locationBefore; // 记录普通模式下窗口的位置
+        private Point locationBefore; // 记录普通模式下窗口的位置
         private Size sizeBefore; // 记录普通模式下窗口的大小
         private int heightAfter = 200; // 附着模式时，窗体通常会比较矮
 
@@ -131,17 +123,17 @@ namespace ja_learner
             if (checkBoxWindowAttach.Checked)
             {
                 // 记录普通状态的窗口位置，切换到吸附状态下的窗口位置
-                sizeBefore = this.Size;
-                locationBefore = this.Location;
-                this.Height = heightAfter;
+                sizeBefore = Size;
+                locationBefore = Location;
+                Height = heightAfter;
                 timerWindowAttach.Enabled = true;
             }
             else
             {
                 timerWindowAttach.Enabled = false;
-                heightAfter = this.Height;
-                this.Size = sizeBefore;
-                this.Location = locationBefore;
+                heightAfter = Height;
+                Size = sizeBefore;
+                Location = locationBefore;
             }
         }
 
@@ -151,7 +143,7 @@ namespace ja_learner
             {
                 WindowAttacher.AttachWindows(this, dictForm);
             }
-            catch (Exception ex)
+            catch 
             {
                 WindowAttach = false;
             }
@@ -201,7 +193,7 @@ namespace ja_learner
 
         private void btnInputText_Click(object sender, EventArgs e)
         {
-            Sentence = Microsoft.VisualBasic.Interaction.InputBox("手动输入", "输入句子", "", 0, 0);
+            Sentence = Interaction.InputBox("手动输入", "输入句子", "", 0, 0);
         }
 
         private void timerSelectWindow_Tick(object sender, EventArgs e)
@@ -250,7 +242,7 @@ namespace ja_learner
                 string windowTitle = WindowAttacher.GetWindowTitle(hwnd);
                 checkBoxWindowAttach.Text = $"与【{windowTitle}】对齐";
                 // 判断窗口句柄是不是自己的
-                if (hwnd == this.Handle || hwnd == dictForm.Handle)
+                if (hwnd == Handle || hwnd == dictForm.Handle)
                 {
                     checkBoxWindowAttach.Enabled = false;
                     return;
@@ -340,7 +332,8 @@ namespace ja_learner
 
         async private void checkBoxTranslateKatakana_CheckedChanged(object sender, EventArgs e)
         {
-            await webView.ExecuteScriptAsync($"setTranslateKatakana({checkBoxTranslateKatakana.Checked.ToString().ToLower()})");
+            string param = checkBoxTranslateKatakana.Checked ? "true" : "false";
+            await webView.ExecuteScriptAsync($"setTranslateKatakana({ param })");
         }
     }
 }
