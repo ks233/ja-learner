@@ -10,7 +10,29 @@ namespace ja_learner
 
         TextAnalyzer textAnalyzer = new TextAnalyzer();
         private string sentence = "";
-
+        private bool immersiveMode = false;
+        public bool ImmersiveMode
+        {
+            get { return immersiveMode; }
+            set
+            {
+                if (value)
+                {
+                    webView.Parent = this;
+                    tabControl.Hide();
+                    panel1.Hide();
+                    FormBorderStyle = FormBorderStyle.None;
+                }
+                else
+                {
+                    webView.Parent = tabControl.TabPages[0];
+                    tabControl.Show();
+                    panel1.Show();
+                    FormBorderStyle = FormBorderStyle.Sizable;
+                }
+                immersiveMode = value;
+            }
+        }
         public string Sentence
         {
             get { return sentence; }
@@ -74,6 +96,20 @@ namespace ja_learner
         private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             string message = e.TryGetWebMessageAsString();
+            // 来自webview的特殊按键事件处理
+            if (message == "DBLCLICK")
+            {
+                ImmersiveMode = !ImmersiveMode;
+                return;
+            }
+            else if (message == "MOUSEDOWN")
+            {
+                // if (ImmersiveMode)
+                {
+                    Drag();
+                }
+                return;
+            }
             dictForm.SearchText(message);
             dictForm.ShowAndFocus();
             Focus();
@@ -143,7 +179,7 @@ namespace ja_learner
             {
                 WindowAttacher.AttachWindows(this, dictForm);
             }
-            catch 
+            catch
             {
                 WindowAttach = false;
             }
@@ -168,6 +204,10 @@ namespace ja_learner
         private void checkBoxClipboardMode_CheckedChanged(object sender, EventArgs e)
         {
             ClipBoardMode = checkBoxClipboardMode.Checked;
+            if (ClipBoardMode)
+            {
+                Sentence = Clipboard.GetText(TextDataFormat.UnicodeText).Trim().Replace("　", "");
+            }
         }
         private void timerGetClipboard_Tick(object sender, EventArgs e)
         {
@@ -333,7 +373,50 @@ namespace ja_learner
         async private void checkBoxTranslateKatakana_CheckedChanged(object sender, EventArgs e)
         {
             string param = checkBoxTranslateKatakana.Checked ? "true" : "false";
-            await webView.ExecuteScriptAsync($"setTranslateKatakana({ param })");
+            await webView.ExecuteScriptAsync($"setTranslateKatakana({param})");
+        }
+
+        // https://stackoverflow.com/questions/31199437/borderless-and-resizable-form-c
+        // 从↑抄来的代码，无边框模式下可调整窗口大小
+        const int WM_NCHITTEST = 0x0084;
+        const int HTCLIENT = 1;
+        const int HTCAPTION = 2;
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+            switch (m.Msg)
+            {
+                case WM_NCHITTEST:
+                    if (m.Result == (IntPtr)HTCLIENT)
+                    {
+                        m.Result = (IntPtr)HTCAPTION;
+                    }
+                    break;
+            }
+        }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.Style |= 0x40000;
+                return cp;
+            }
+        }
+
+        // 窗口拖拽
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        private void Drag()
+        {
+            ReleaseCapture();
+            SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
         }
     }
 }
