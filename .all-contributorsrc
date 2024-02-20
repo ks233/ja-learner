@@ -1,0 +1,39 @@
+{
+  "projectName": "ja-learner",
+  "projectOwner": "ks233",
+  "files": [
+    "README.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "ks233",
+      "name": "ks233",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38981529?v=4",
+      "profile": "https://ks233.github.io/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "shaka0919",
+      "name": "Harvey Wang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17539962?v=4",
+      "profile": "https://github.com/shaka0919",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ly-nld",
+      "name": "跨性别",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38471793?v=4",
+      "profile": "http://lgbt.sh",
+      "contributions": [
+        "infra"
+      ]
+    }
+  ]
+}
