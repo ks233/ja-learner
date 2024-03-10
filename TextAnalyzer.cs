@@ -56,7 +56,7 @@ namespace ja_learner
                     TextAnalyzerResult result = new TextAnalyzerResult();
                     // unidic里有些词的解析结果会有双引号，双引号里面有逗号，导致Split错位，所以先把双引号中间清空再Split
                     var features = Regex.Replace(node.Feature, "\"[^\"]*\"", "").Split(','); 
-
+                    
                     //MessageBox.Show(node.Feature);
                     // 这个mecab库好像没办法用dicrc自定义输出格式，dicrc只对个别属性生效
                     // 那只能用数组长度来判断了，如果很长说明是unidic，否则就是ipadic（默认词典）
@@ -64,7 +64,7 @@ namespace ja_learner
                     if (features.Length > 16) {
                         // unidic
                         result.Pos = features[0];
-                        result.Basic = features[8];
+                        result.Basic = features[7];
                         result.Reading = features[20];
                         if (result.Reading == "*")
                         {
