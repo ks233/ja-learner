@@ -15,7 +15,6 @@
 
 
 
-
 ## 功能介绍
 
 * **语句分析**：用不同样式区分句子成分，为句子中的汉字注音
@@ -75,13 +74,13 @@
 
 在 `appsettings.json` 中配置 GPT 相关字段：
 
-```json
+```js
 "GPT": {
     "ApiKey": "sk-xxx",
     "ApiUrl": "https://api.openai.com/{0}/{1}", // 实际调用为https://api.openai.com/v1/chat/completions
-    "ExtraPromptDir": "extra_prompts",			// 额外的Prompt，比如指定某些角色名字怎么翻译
-    "TranslatePrompt": "...",					// 翻译Prompt
-    "ExplainPrompt": "..."						// 分析Prompt
+    "ExtraPromptDir": "extra_prompts",		// 额外的Prompt，比如指定某些角色名字怎么翻译
+    "TranslatePrompt": "...",			// 翻译Prompt
+    "ExplainPrompt": "..."			// 分析Prompt
 }
 ```
 
@@ -105,16 +104,16 @@ Anki 是一款经典的记忆卡片软件，它的设计理念影响了很多背
 
 在 `appsettings.json` 中，与 Anki 有关的字段有以下这些：
 
-```json
+```js
 "AnkiEnabled": true,
 "Anki": {
     "AnkiConnectUrl": "http://127.0.0.1:8765", // AnkiConnect 默认端口
-    "Deck": "test",				// 添加卡片的目标牌组
+    "Deck": "test",			// 添加卡片的目标牌组
     "Model": "ja-learner",		// 卡片的模板名
-    "FieldNames":{				// 模板中的字段
+    "FieldNames":{			// 模板中的字段
         "Word": "单词",			// 存储单词的字段名
         "Example": "例句",		// 存储例句的字段名
-        "Explain": "解释"			// 存储解释的字段名
+        "Explain": "解释"		// 存储解释的字段名
     }
 }
 ```
