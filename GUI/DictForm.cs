@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ja_learner
 {
@@ -75,9 +76,29 @@ namespace ja_learner
 #endif
         }
 
-        public void UpdateTranslationPanelText(string text)
+        async public void UpdateTranslationPanelText(string text)
         {
+            await webView.ExecuteScriptAsync($"setCurrentText('{text}')");
             translationPanel.UpdateText(text);
+        }
+
+        async private void webView_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+        {
+            string message = e.TryGetWebMessageAsString();
+            if (message == "ANKI_INIT")
+            {
+                if (Program.APP_SETTING.AnkiEnabled)
+                {
+                    await webView.ExecuteScriptAsync($"setAnkiEnabled(true)");
+                    AnkiOptions o = Program.APP_SETTING.Anki;
+                    await webView.ExecuteScriptAsync($"setAnkiConfig('{o.Deck}','{o.Model}','{o.FieldNames.Word}','{o.FieldNames.Example}','{o.FieldNames.Explain}')");
+                }
+                else
+                {
+                    await webView.ExecuteScriptAsync($"setAnkiEnabled(false)");
+                }
+                return;
+            }
         }
     }
 }

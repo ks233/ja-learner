@@ -50,6 +50,7 @@
             webView.Size = new Size(410, 425);
             webView.TabIndex = 0;
             webView.ZoomFactor = 1D;
+            webView.WebMessageReceived += webView_WebMessageReceived;
             // 
             // tabControl1
             // 

@@ -99,7 +99,7 @@ namespace ja_learner
             return (Control.MouseButtons & button) == button;
         }
 
-        public static void AttachWindows(Form form, Form dictForm)
+        public static void AttachWindows(MainForm form, DictForm dictForm)
         {
             // 调用 GetWindowRect 函数获取窗口位置和大小
             Rectangle rect;

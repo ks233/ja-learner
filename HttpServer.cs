@@ -13,6 +13,7 @@ namespace ja_learner
     {
         private static string _rootFolder = Directory.GetCurrentDirectory() + @"\dist";
         private static HttpListener _httpListener;
+        private static IWebProxy direct, proxy;
         public static void StartServer()
         {
             port = FindAvailablePort();
@@ -21,7 +22,14 @@ namespace ja_learner
 
             proxyDict["/mojiapi"] = "https://api.mojidict.com";
             proxyDict["/googletrans_api"] = "https://translate.googleapis.com";
-            proxyDict["/googletrans"] = "https://clients5.google.com/translate_a";
+            proxyDict["/googletrans"] = "https://translate.googleapis.com/translate_a";
+            proxyDict["/ankiconnect"] = Program.APP_SETTING.Anki.AnkiConnectUrl;
+
+            direct = HttpClient.DefaultProxy;
+            if(Program.APP_SETTING.HttpProxy != string.Empty)
+            {
+                proxy = new WebProxy(Program.APP_SETTING.HttpProxy);
+            }
 
             Task.Run(() =>
             {
@@ -52,7 +60,7 @@ namespace ja_learner
 
         static int FindAvailablePort()
         {
-            int port = 8080;
+            int port = Program.APP_SETTING.Port;
             while (IsPortInUse(port) && port < 65536)
             {
                 port++;
@@ -85,6 +93,7 @@ namespace ja_learner
             return false;
         }
 
+        // private static string googleServer = "translate.googleapis.com";
         private static Dictionary<string, string> proxyDict = new Dictionary<string, string>();
 
         private static async void HandleRequest(HttpListenerContext context)
@@ -102,46 +111,53 @@ namespace ja_learner
             // 代理
             if (proxyName != null)
             {
-                using (HttpClient httpClient = new HttpClient())
+                HttpClient.DefaultProxy = UserConfig.UseProxy ? proxy : direct;
+                try
                 {
-                    HttpResponseMessage r;
-                    string apiUrl = request.Url.PathAndQuery.Replace(proxyName, proxyDict[proxyName]);
-                    if (request.HttpMethod == "GET")
-                    {
-                        r = await httpClient.GetAsync(request.RawUrl.Replace(proxyName, proxyDict[proxyName]));
-                    }
-                    else
-                    {
-                        string json = "";
-                        using (StreamReader reader = new StreamReader(request.InputStream))
-                        {
-                            json = reader.ReadToEnd();
-                        }
-                        httpClient.DefaultRequestHeaders.Clear();
-                        // httpClient.DefaultRequestHeaders.Host = proxyDict[proxyName].Replace("https://", "");
-                        HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-                        content.Headers.Clear();
-                        // 将HttpListenerRequest的头信息复制到HttpContent的头信息
-                        foreach (string headerName in request.Headers.AllKeys)
-                        {
-                            // 根据需要自定义头信息的处理
-                            string headerValue = request.Headers[headerName];
-                            if (!string.IsNullOrEmpty(headerValue))
-                            {
-                                content.Headers.TryAddWithoutValidation(headerName, headerValue);
-                            }
-                        }
 
-                        r = await httpClient.PostAsync(apiUrl, content);
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        HttpResponseMessage r;
+                        string apiUrl = request.Url.PathAndQuery.Replace(proxyName, proxyDict[proxyName]);
+                        if (request.HttpMethod == "GET")
+                        {
+                            r = await httpClient.GetAsync(request.RawUrl.Replace(proxyName, proxyDict[proxyName]));
+                        }
+                        else
+                        {
+                            string json = "";
+                            using (StreamReader reader = new StreamReader(request.InputStream))
+                            {
+                                json = reader.ReadToEnd();
+                            }
+                            httpClient.DefaultRequestHeaders.Clear();
+                            // httpClient.DefaultRequestHeaders.Host = proxyDict[proxyName].Replace("https://", "");
+                            HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                            content.Headers.Clear();
+                            // 将HttpListenerRequest的头信息复制到HttpContent的头信息
+                            foreach (string headerName in request.Headers.AllKeys)
+                            {
+                                // 根据需要自定义头信息的处理
+                                string headerValue = request.Headers[headerName];
+                                if (!string.IsNullOrEmpty(headerValue))
+                                {
+                                    content.Headers.TryAddWithoutValidation(headerName, headerValue);
+                                }
+                            }
+                            r = await httpClient.PostAsync(apiUrl, content);
+                        }
+                        // 将代理请求的响应返回给客户端
+                        response.StatusCode = (int)r.StatusCode;
+                        response.ContentType = r.Content.Headers.ContentType?.ToString();
+                        byte[] buffer = await r.Content.ReadAsByteArrayAsync();
+                        response.ContentLength64 = buffer.Length;
+                        response.OutputStream.Write(buffer, 0, buffer.Length);
                     }
-                    // 将代理请求的响应返回给客户端
-                    response.StatusCode = (int)r.StatusCode;
-                    response.ContentType = r.Content.Headers.ContentType?.ToString();
-                    byte[] buffer = await r.Content.ReadAsByteArrayAsync();
-                    response.ContentLength64 = buffer.Length;
-                    response.OutputStream.Write(buffer, 0, buffer.Length);
+                    response.Close();
+                }catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
-                response.Close();
             }
             else if (File.Exists(filePath))
             {
