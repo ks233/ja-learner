@@ -8,6 +8,8 @@ namespace ja_learner
     {
         DictForm dictForm;
 
+        Size defaultMinSize;
+
         TextAnalyzer textAnalyzer = new TextAnalyzer();
         private string sentence = "";
         private bool immersiveMode = false;
@@ -22,6 +24,7 @@ namespace ja_learner
                     tabControl.Hide();
                     panel1.Hide();
                     FormBorderStyle = FormBorderStyle.None;
+                    MinimumSize = new Size(0,0);
                 }
                 else
                 {
@@ -29,6 +32,7 @@ namespace ja_learner
                     tabControl.Show();
                     panel1.Show();
                     FormBorderStyle = FormBorderStyle.Sizable;
+                    MinimumSize = defaultMinSize;
                 }
                 immersiveMode = value;
             }
@@ -84,7 +88,7 @@ namespace ja_learner
             dictForm.Show();
             dictForm.Hide();
             UpdateExtraPromptCombobox();
-
+            
             // 初始化 MainForm
             if (Program.APP_SETTING.HttpProxy != string.Empty)
             {
@@ -92,6 +96,7 @@ namespace ja_learner
                 checkBoxUseProxy.Text = $"HTTP代理：{Program.APP_SETTING.HttpProxy}";
             }
             comboBoxTranslator.SelectedIndex = 0;
+            defaultMinSize = MinimumSize;
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
