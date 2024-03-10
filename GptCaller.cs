@@ -1,10 +1,6 @@
 ﻿using OpenAI_API;
 using OpenAI_API.Chat;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace ja_learner
 {
@@ -12,15 +8,32 @@ namespace ja_learner
     {
         private static OpenAIAPI api;
 
+        private static IHttpClientFactory defaultFactory;
+        private static IHttpClientFactory proxyFactory;
+
         public static void Initialize()
         {
-            api = new(Program.APP_SETTING.ApiKey) { ApiUrlFormat = Program.APP_SETTING.ApiUrl };
+            api = new(Program.APP_SETTING.GPT.ApiKey) { ApiUrlFormat = Program.APP_SETTING.GPT.ApiUrl };
+            defaultFactory = api.HttpClientFactory;
+            proxyFactory = new MyHttpClientFactory(Program.APP_SETTING.HttpProxy);
+        }
+
+        public static void SetProxy(bool useProxy)
+        {
+            if (useProxy)
+            {
+                api.HttpClientFactory = proxyFactory;
+            }
+            else
+            {
+                api.HttpClientFactory = defaultFactory;
+            }
         }
 
         public static Conversation CreateTranslateConversation(string text)
         {
             Conversation conversation = api.Chat.CreateConversation();
-            conversation.AppendSystemMessage("You are a translation engine, translate the text to Simplified Chinese. Don't output anything other than translation results.");
+            conversation.AppendSystemMessage(Program.APP_SETTING.GPT.TranslatePrompt);
             if (UserConfig.useExtraPrompt)
             {
                 AddExtraSystemPrompt(conversation);
@@ -32,7 +45,7 @@ namespace ja_learner
         public static Conversation CreateInterpretConversation(string text)
         {
             Conversation conversation = api.Chat.CreateConversation();
-            conversation.AppendSystemMessage("You are a Japanese teacher, List and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
+            conversation.AppendSystemMessage(Program.APP_SETTING.GPT.ExplainPrompt);
             if (UserConfig.useExtraPrompt)
             {
                 AddExtraSystemPrompt(conversation);
@@ -64,4 +77,23 @@ namespace ja_learner
             }
         }
     }
+
+    class MyHttpClientFactory : IHttpClientFactory
+    {
+        private string proxy;
+        public MyHttpClientFactory(string proxy)
+        {
+            this.proxy = proxy;
+        }
+        HttpClient IHttpClientFactory.CreateClient(string name)
+        {
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                Proxy = new WebProxy($"http://{proxy}")
+            };
+            var client = new HttpClient(handler);
+            return client;
+        }
+    }
+
 }

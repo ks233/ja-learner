@@ -8,6 +8,8 @@ namespace ja_learner
     {
         DictForm dictForm;
 
+        Size defaultMinSize;
+
         TextAnalyzer textAnalyzer = new TextAnalyzer();
         private string sentence = "";
         private bool immersiveMode = false;
@@ -22,6 +24,7 @@ namespace ja_learner
                     tabControl.Hide();
                     panel1.Hide();
                     FormBorderStyle = FormBorderStyle.None;
+                    MinimumSize = new Size(0,0);
                 }
                 else
                 {
@@ -29,6 +32,7 @@ namespace ja_learner
                     tabControl.Show();
                     panel1.Show();
                     FormBorderStyle = FormBorderStyle.Sizable;
+                    MinimumSize = defaultMinSize;
                 }
                 immersiveMode = value;
             }
@@ -76,14 +80,23 @@ namespace ja_learner
             // 初始化 HTTP 服务器
             HttpServer.StartServer();
             webView.Source = new Uri($"http://localhost:{HttpServer.Port}/"); // build
-            Text += $" - 已占用端口：{HttpServer.Port} -";
+            Text += $" - {HttpServer.Port} -";
 #endif
 
+            // 初始化 DictForm
             dictForm = new DictForm(this);
             dictForm.Show();
             dictForm.Hide();
             UpdateExtraPromptCombobox();
+            
+            // 初始化 MainForm
+            if (Program.APP_SETTING.HttpProxy != string.Empty)
+            {
+                checkBoxUseProxy.Enabled = true;
+                checkBoxUseProxy.Text = $"HTTP代理：{Program.APP_SETTING.HttpProxy}";
+            }
             comboBoxTranslator.SelectedIndex = 0;
+            defaultMinSize = MinimumSize;
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)
@@ -417,6 +430,12 @@ namespace ja_learner
         {
             ReleaseCapture();
             SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+        }
+
+        private void checkBoxUseProxy_CheckedChanged(object sender, EventArgs e)
+        {
+            UserConfig.UseProxy = checkBoxUseProxy.Checked;
+            GptCaller.SetProxy(UserConfig.UseProxy);
         }
     }
 }

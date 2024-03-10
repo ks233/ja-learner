@@ -32,6 +32,7 @@
             timerWindowAttach = new System.Windows.Forms.Timer(components);
             timerSelectWindow = new System.Windows.Forms.Timer(components);
             tabPageSettings = new TabPage();
+            checkBoxUseProxy = new CheckBox();
             comboBoxExtraPrompts = new ComboBox();
             checkBoxUseExtraPrompt = new CheckBox();
             buttonUpdateExtraPrompt = new Button();
@@ -70,6 +71,7 @@
             // 
             // tabPageSettings
             // 
+            tabPageSettings.Controls.Add(checkBoxUseProxy);
             tabPageSettings.Controls.Add(comboBoxExtraPrompts);
             tabPageSettings.Controls.Add(checkBoxUseExtraPrompt);
             tabPageSettings.Controls.Add(buttonUpdateExtraPrompt);
@@ -81,10 +83,22 @@
             tabPageSettings.Location = new Point(4, 26);
             tabPageSettings.Name = "tabPageSettings";
             tabPageSettings.Padding = new Padding(3);
-            tabPageSettings.Size = new Size(616, 199);
+            tabPageSettings.Size = new Size(556, 139);
             tabPageSettings.TabIndex = 0;
             tabPageSettings.Text = "系统设置";
             tabPageSettings.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseProxy
+            // 
+            checkBoxUseProxy.AutoSize = true;
+            checkBoxUseProxy.Enabled = false;
+            checkBoxUseProxy.Location = new Point(8, 110);
+            checkBoxUseProxy.Name = "checkBoxUseProxy";
+            checkBoxUseProxy.Size = new Size(81, 21);
+            checkBoxUseProxy.TabIndex = 9;
+            checkBoxUseProxy.Text = "HTTP代理";
+            checkBoxUseProxy.UseVisualStyleBackColor = true;
+            checkBoxUseProxy.CheckedChanged += checkBoxUseProxy_CheckedChanged;
             // 
             // comboBoxExtraPrompts
             // 
@@ -180,7 +194,7 @@
             tabPageText.Location = new Point(4, 26);
             tabPageText.Name = "tabPageText";
             tabPageText.Padding = new Padding(3);
-            tabPageText.Size = new Size(616, 199);
+            tabPageText.Size = new Size(556, 139);
             tabPageText.TabIndex = 1;
             tabPageText.Text = "语句分析";
             tabPageText.UseVisualStyleBackColor = true;
@@ -193,7 +207,7 @@
             webView.Dock = DockStyle.Fill;
             webView.Location = new Point(3, 3);
             webView.Name = "webView";
-            webView.Size = new Size(610, 193);
+            webView.Size = new Size(550, 133);
             webView.TabIndex = 1;
             webView.ZoomFactor = 1D;
             // 
@@ -205,7 +219,7 @@
             tabControl.Location = new Point(0, 0);
             tabControl.Name = "tabControl";
             tabControl.SelectedIndex = 0;
-            tabControl.Size = new Size(624, 229);
+            tabControl.Size = new Size(564, 169);
             tabControl.TabIndex = 2;
             // 
             // timerGetClipboard
@@ -223,9 +237,9 @@
             panel1.Controls.Add(btnInputText);
             panel1.Controls.Add(checkBoxClipboardMode);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 225);
+            panel1.Location = new Point(0, 165);
             panel1.Name = "panel1";
-            panel1.Size = new Size(624, 36);
+            panel1.Size = new Size(564, 36);
             panel1.TabIndex = 3;
             // 
             // comboBoxTranslator
@@ -234,7 +248,7 @@
             comboBoxTranslator.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxTranslator.FormattingEnabled = true;
             comboBoxTranslator.Items.AddRange(new object[] { "谷歌翻译", "ChatGPT", "谷歌生草机" });
-            comboBoxTranslator.Location = new Point(372, 6);
+            comboBoxTranslator.Location = new Point(315, 6);
             comboBoxTranslator.Name = "comboBoxTranslator";
             comboBoxTranslator.Size = new Size(86, 25);
             comboBoxTranslator.TabIndex = 12;
@@ -243,7 +257,7 @@
             // 
             checkBoxTranslateKatakana.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             checkBoxTranslateKatakana.AutoSize = true;
-            checkBoxTranslateKatakana.Location = new Point(545, 8);
+            checkBoxTranslateKatakana.Location = new Point(488, 8);
             checkBoxTranslateKatakana.Name = "checkBoxTranslateKatakana";
             checkBoxTranslateKatakana.Size = new Size(75, 21);
             checkBoxTranslateKatakana.TabIndex = 10;
@@ -255,7 +269,7 @@
             // 
             checkBoxAutoTranslate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             checkBoxAutoTranslate.AutoSize = true;
-            checkBoxAutoTranslate.Location = new Point(469, 8);
+            checkBoxAutoTranslate.Location = new Point(412, 8);
             checkBoxAutoTranslate.Name = "checkBoxAutoTranslate";
             checkBoxAutoTranslate.Size = new Size(75, 21);
             checkBoxAutoTranslate.TabIndex = 9;
@@ -265,7 +279,7 @@
             // buttonTranslate
             // 
             buttonTranslate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            buttonTranslate.Location = new Point(321, 5);
+            buttonTranslate.Location = new Point(264, 5);
             buttonTranslate.Name = "buttonTranslate";
             buttonTranslate.Size = new Size(45, 27);
             buttonTranslate.TabIndex = 8;
@@ -308,10 +322,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(624, 261);
+            ClientSize = new Size(564, 201);
             Controls.Add(panel1);
             Controls.Add(tabControl);
-            MinimumSize = new Size(580, 250);
+            MinimumSize = new Size(580, 240);
             Name = "MainForm";
             Text = "KS的日语学习工具";
             Load += MainForm_Load;
@@ -351,5 +365,6 @@
         private ComboBox comboBoxExtraPrompts;
         private CheckBox checkBoxTranslateKatakana;
         private ComboBox comboBoxTranslator;
+        private CheckBox checkBoxUseProxy;
     }
 }

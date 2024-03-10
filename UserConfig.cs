@@ -12,7 +12,7 @@ namespace ja_learner
     {
         public static bool useExtraPrompt = false;
         private static string extraPromptFilename = "";
-
+        public static bool UseProxy = false;
         public static string ExtraPromptFilename
         {
             get
@@ -32,7 +32,7 @@ namespace ja_learner
 
         public static void UpdateExtraPrompt()
         {
-            var filePath = Path.Combine(Program.APP_SETTING.ExtraPromptDir, extraPromptFilename);
+            var filePath = Path.Combine(Program.APP_SETTING.GPT.ExtraPromptDir, extraPromptFilename);
             try
             {
                 ExtraPrompt = File.ReadAllText(filePath);
@@ -43,7 +43,7 @@ namespace ja_learner
 
         public static string[] GetExtraPromptFiles()
         {
-            return Directory.CreateDirectory(Program.APP_SETTING.ExtraPromptDir) // 如果文件夹不存在，创建文件夹
+            return Directory.CreateDirectory(Program.APP_SETTING.GPT.ExtraPromptDir) // 如果文件夹不存在，创建文件夹
                     .GetFiles()
                     .Select(x => x.Name)
                     .ToArray(); 
