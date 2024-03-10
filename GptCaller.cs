@@ -33,7 +33,7 @@ namespace ja_learner
         public static Conversation CreateTranslateConversation(string text)
         {
             Conversation conversation = api.Chat.CreateConversation();
-            conversation.AppendSystemMessage("You are a translation engine, translate the text to Simplified Chinese. Don't output anything other than translation results.");
+            conversation.AppendSystemMessage(Program.APP_SETTING.GPT.TranslatePrompt);
             if (UserConfig.useExtraPrompt)
             {
                 AddExtraSystemPrompt(conversation);
@@ -45,7 +45,7 @@ namespace ja_learner
         public static Conversation CreateInterpretConversation(string text)
         {
             Conversation conversation = api.Chat.CreateConversation();
-            conversation.AppendSystemMessage("You are a Japanese teacher, List and explain the vocabulary (except prepositions) and grammar of the given text in Simplified Chinese. Your output consists of three parts: translation, vocabulary, grammar. Don't use English and romaji.");
+            conversation.AppendSystemMessage(Program.APP_SETTING.GPT.ExplainPrompt);
             if (UserConfig.useExtraPrompt)
             {
                 AddExtraSystemPrompt(conversation);

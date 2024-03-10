@@ -30,6 +30,10 @@ namespace ja_learner
             {
                 proxy = new WebProxy(Program.APP_SETTING.HttpProxy);
             }
+            else
+            {
+                proxy = direct;
+            }
 
             Task.Run(() =>
             {
