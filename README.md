@@ -76,7 +76,7 @@
 "GPT": {
     "ApiKey": "sk-xxx",
     "ApiUrl": "https://api.openai.com/{0}/{1}", // 实际调用为https://api.openai.com/v1/chat/completions
-    "Model": "gpt-4o-mini", // 设置模型
+    "Model": "gpt-4o-mini", // 兼容OpenAI API的模型
     "ExtraPromptDir": "extra_prompts",		// 额外的Prompt，比如指定某些角色名字怎么翻译
     "TranslatePrompt": "...",			// 翻译Prompt
     "ExplainPrompt": "..."			// 分析Prompt
@@ -144,6 +144,26 @@ Anki 是一款经典的记忆卡片软件，它的设计理念影响了很多背
 外来语标注功能使用谷歌翻译将片假名单词翻译为英语，但不是所有片假名单词都是外来语，外来语也不一定来源于英语，还有像 supplies 和 surprise 这样的“同音词”也不好区分，因此也会出现标注错误的情况。
 
 根据作者自己的使用体验，整体准确率还可以接受，但还是不建议完全初学者使用，以免被误导。如果遇到可疑的注音或翻译，建议查询更权威的词典，比如 [Weblio 辞書](https://www.weblio.jp/)、大辞林、小学馆日中，网络用语可以查 [ニコニコ大百科](https://dic.nicovideo.jp/)。
+
+## 在 Dev Container 中编译
+
+1. **打开项目**：在 VS Code 中打开 `ja-learner` 项目。
+2. **打开远程容器**：点击左下角的绿色按钮（通常显示为 "><" 或 "打开远程窗口"），然后选择 "Reopen in Container"。(确保Docker已安装并运行, )
+3. **等待容器构建**：VS Code 会自动下载并构建 devcontainer，这可能需要一些时间。
+4. **运行编译命令**：
+     ```bash
+     dotnet publish ja-learner.sln -c Release -r win-x64 --self-contained
+     ```
+5. **构建 Vue.js 项目**：
+     ```bash
+     cd ..
+     git clone https://github.com/ks233/ja-learner-webview
+     cd ja-learner-webview
+     npm install
+     npm run build
+     mv dist ../ja-learner/bin/Release/net6.0-windows/win-x64
+     ```
+6. **完成编译**：编译完成后，你可以在 `bin/Release/net6.0-windows/win-x64` 目录下找到编译后的exe可执行文件。
 
 ## 相关项目
 
