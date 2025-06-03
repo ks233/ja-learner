@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ja_learner
@@ -44,7 +45,8 @@ namespace ja_learner
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    MessageBox.Show(ex.Message);
+                    Application.Exit();
                 }
             });
         }
