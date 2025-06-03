@@ -324,7 +324,7 @@ namespace ja_learner
             else if (comboBoxTranslator.Text == "谷歌翻译")
             {
                 // 效果与网页版一致的API，不知道能用多久
-                await webView.ExecuteScriptAsync($"runGoogleTransTk(\"{sentence.Replace("\r\n", "")}\")");
+                await webView.ExecuteScriptAsync($"runGoogleTransV2(\"{sentence.Replace("\r\n", "")}\")");
             }
         }
 
@@ -441,7 +441,6 @@ namespace ja_learner
         private void buttonDebug_Click(object sender, EventArgs e)
         {
             Debug.WriteLine("Debug");
-            GptCaller.Chat("", "test", s => Debug.Write(s));
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ja_learner
             proxyDict["/googletrans_api"] = "https://translate.googleapis.com";
             proxyDict["/googletrans"] = "https://translate.googleapis.com/translate_a";
             proxyDict["/ankiconnect"] = Program.APP_SETTING.Anki.AnkiConnectUrl;
-
+            proxyDict["/goog_v2"] = "https://translate-pa.googleapis.com/v1/translateHtml";
             direct = HttpClient.DefaultProxy;
             if(Program.APP_SETTING.HttpProxy != string.Empty)
             {
