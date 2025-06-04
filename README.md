@@ -17,10 +17,10 @@
 
 * **语句分析**：用不同样式区分句子成分，为句子中的汉字注音
 * **单词查询**：点击单词一键查询 MOJi 辞書，哪里不会点哪里
-* **参考翻译**：支持谷歌翻译与 ChatGPT 翻译，把握句子整体含义
+* **参考翻译**：支持谷歌翻译与 AI 翻译，把握句子整体含义
 * **片假不留**：在片假名上方显示英语翻译，满屏片假名也不怕
 * **游戏文本分析**：吸附并跟随游戏窗口，配合文本提取工具，实时分析游戏文本
-* **AI 讲解**：调用 ChatGPT 讲解句子中的单词和语法成分
+* **AI 讲解**：调用 AI 讲解句子中的单词和语法成分
 * **添加 Anki 卡片**：快速添加单词卡片，打造自己的单词本
 
 ## 使用说明
@@ -56,11 +56,13 @@
 
 ### 参考翻译
 
-目前支持了谷歌翻译和 GPT 翻译。其中谷歌翻译无需配置，可以免费无限制使用，而 GPT 需要配置 API Key，消耗 API 余额。
+目前支持了谷歌翻译和 GPT 翻译。其中“谷歌翻译”无需配置，可以免费无限制使用，而 GPT 需要配置 API Key，消耗 API 余额。
 
 #### 谷歌翻译 & 谷歌生草机
 
-这是两个不同的接口，“谷歌翻译”会得到与网页版谷歌翻译相同的翻译结果，“谷歌生草机”的翻译结果与网页版不同，质量普遍低于网页版。
+这是两个不同的接口，“谷歌翻译”会得到与网页版谷歌翻译相同的翻译结果，但不是正规 API，以后可能会失效。
+
+“谷歌生草机”的翻译结果与网页版不同，质量普遍低于网页版。
 
 > 如果你的网络环境无法访问谷歌翻译，可以尝试使用 [GoodCoder666/GoogleTranslate_IPFinder](https://github.com/GoodCoder666/GoogleTranslate_IPFinder) 等工具扫描可用 IP，然后修改 HOST。
 
@@ -71,17 +73,33 @@
 ```js
 "GPT": {
     "ApiKey": "sk-xxx",
-    "ApiUrl": "https://api.openai.com/{0}/{1}", // 实际调用为https://api.openai.com/v1/chat/completions
-    "Model": "gpt-4o-mini", // 兼容OpenAI API的模型
-    "ExtraPromptDir": "extra_prompts",        // 额外的Prompt，比如指定某些角色名字怎么翻译
-    "TranslatePrompt": "...",            // 翻译Prompt
-    "ExplainPrompt": "..."            // 分析Prompt
+    "ApiUrl": "https://api.openai.com/v1", // 实际调用为 https://api.openai.com/v1/chat/completions
+    "Model": "gpt-4o-mini", // 兼容 OpenAI API 的模型
+    "ExtraPromptDir": "extra_prompts", // 额外的 Prompt，比如指定某些角色名字怎么翻译
+    "TranslatePrompt": "...", // 翻译 Prompt
+    "ExplainPrompt": "..." // 分析 Prompt
 }
 ```
 
-一般只需要配置 ApiKey 就行，如果使用非官方 API 请按照格式修改 ApiUrl，如果对默认的 Prompt 不满意也可以自行更改。
+除了 ChatGPT，也支持其它兼容 OpenAI API 的模型，比如 Ollama、Deepseek 等。
 
-配置好 ApiKey 就可以使用 ChatGPT 翻译和解说文本了。
+Ollama：
+
+```js
+    "ApiKey": "whatever",
+    "ApiUrl": "http://localhost:11434/v1",
+    "Model": "qwen2.5:3b",
+```
+
+Deepseek：
+
+```js
+    "ApiKey": "sk-xxx",
+    "ApiUrl": "https://api.deepseek.com/v1", 
+    "Model": "deepseek-chat",
+```
+
+如果对默认的 Prompt 不满意也可以自行更改，配置好 ApiKey 就可以使用 AI 翻译和解说文本了。
 
 ![gpt](README/gpt.gif)
 
@@ -140,28 +158,6 @@ Anki 是一款经典的记忆卡片软件，它的设计理念影响了很多背
 
 根据作者自己的使用体验，整体准确率还可以接受，但还是不建议完全初学者使用，以免被误导。如果遇到可疑的注音或翻译，建议查询更权威的词典，比如 [Weblio 辞書](https://www.weblio.jp/)、大辞林、小学馆日中，网络用语可以查 [ニコニコ大百科](https://dic.nicovideo.jp/)。
 
-## 在 Dev Container 中编译
-
-1. **打开项目**：在 VS Code 中打开 `ja-learner` 项目。
-2. **打开远程容器**：点击左下角的绿色按钮（通常显示为 "><" 或 "打开远程窗口"），然后选择 "Reopen in Container"。(确保Docker已安装并运行, )
-3. **等待容器构建**：VS Code 会自动下载并构建 devcontainer，这可能需要一些时间。
-4. **运行编译命令**：
-   
-   ```bash
-   dotnet publish ja-learner.sln -c Release -r win-x64 --self-contained
-   ```
-5. **构建 Vue.js 项目**：
-   
-   ```bash
-   cd ..
-   git clone https://github.com/ks233/ja-learner-webview
-   cd ja-learner-webview
-   npm install
-   npm run build
-   mv dist ../ja-learner/bin/Release/net6.0-windows/win-x64
-   ```
-6. **完成编译**：编译完成后，你可以在 `bin/Release/net6.0-windows/win-x64` 目录下找到编译后的exe可执行文件。
-
 ## 相关项目
 
 开坑的想法主要来源于 [YUKI 翻译器](https://github.com/project-yuki/YUKI) 和 [Translation-Aggregator](https://github.com/Translation-Aggregator/Translation-Aggregator)，前者支持了丰富的翻译接口，内置了文本提取功能，但使用起来比较复杂，且缺少快速查词的功能；后者虽然可以鼠标悬停查词，但只有日英词典、界面比较古老，而且翻译接口几乎炸完了，于是我决定搓一个更简单、更符合自己需求的工具。
@@ -177,6 +173,13 @@ v0.4 更新了添加 Anki 卡片的功能，想法来源于 [2DIPW/novel2anki](h
 * 谷歌翻译：参考了 [FilipePS/Traduzir-paginas-web](https://github.com/FilipePS/Traduzir-paginas-web) 的 API 调用方式
 * Anki：[AnkiConnect](https://ankiweb.net/shared/info/2055492159)
 * 其它参考资源：[taishi-i/awesome-japanese-nlp-resources](https://github.com/taishi-i/awesome-japanese-nlp-resources)
+
+## 作者的其它项目
+
+两个开箱即用的网页小工具，都直接部署在 github.io 上，有兴趣的也可以试试看。
+
+- [ks233/video-annotator: ▶️ 纯前端实现，轻便实用的本地视频笔记 / 游戏录像复盘 / 影视音乐分析工具](https://github.com/ks233/video-annotator)
+- [ks233/color-study-tool: 一个巨简陋的网页端色彩收集器，用于研究色彩组合的 HSV 规律。](https://github.com/ks233/color-study-tool)
 
 ## 贡献者
 
